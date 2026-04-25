@@ -3,6 +3,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
+import { useLang } from "@/lib/LangContext";
+
 
 const navLinksAr = [
   { label: "من نحن", href: "/about" },
@@ -22,9 +24,8 @@ const navLinksEn = [
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [lang, setLang] = useState<"ar" | "en">("ar");
+  const { lang, setLang, isAr } = useLang();
 
-  const isAr = lang === "ar";
   const navLinks = isAr ? navLinksAr : navLinksEn;
   const logo = isAr
     ? "/images/Q Express Logos-03.png"
