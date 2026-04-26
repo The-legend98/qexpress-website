@@ -66,8 +66,9 @@ export default function WhyUsSection({ lang }: WhyUsSectionProps) {
   return (
     <section
       dir={isAr ? "rtl" : "ltr"}
-      className={`relative py-24 md:py-32 overflow-hidden transition-colors duration-300 ${isDark ? "bg-[#050810]" : "bg-white"}`}
-    >
+      className={`relative py-24 md:py-32 overflow-hidden transition-colors duration-300 section-sep ${
+        isDark ? "section-dark-2" : "section-light-2"
+      }`}  >
       {/* Background */}
       <div className="absolute inset-0 pointer-events-none">
         {isDark && (

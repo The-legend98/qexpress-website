@@ -113,10 +113,11 @@ export default function Footer() {
   return (
     <footer dir={isAr ? "rtl" : "ltr"} className={`text-white transition-colors duration-300 ${isDark ? "bg-[#050a06]" : "bg-[#0f1a12]"}`}>
       <div className="max-w-7xl mx-auto px-6 pt-16 pb-10">
-        <div className="grid md:grid-cols-2 lg:grid-cols-12 gap-10">
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-12 gap-8">
 
           {/* Brand */}
-          <div className="lg:col-span-4">
+          <div className="lg:col-span-4 col-span-2">
+
             <Link href="/">
             <Image
                 src={isAr ? "/images/Q Express Logos-03.png" : "/images/Q Express Logos-04.png"}
@@ -149,7 +150,8 @@ export default function Footer() {
           </div>
 
           {/* Company */}
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-2 col-span-1">
+
             <h4 className="text-white font-semibold text-sm mb-5 pb-2 border-b border-white/10">
               {t.company.title}
             </h4>
@@ -169,7 +171,7 @@ export default function Footer() {
           </div>
 
           {/* Services */}
-          <div className="lg:col-span-3">
+          <div className="lg:col-span-3 col-span-1">
             <h4 className="text-white font-semibold text-sm mb-5 pb-2 border-b border-white/10">
               {t.services.title}
             </h4>
@@ -189,7 +191,7 @@ export default function Footer() {
           </div>
 
           {/* Contact */}
-          <div className="lg:col-span-3">
+          <div className="lg:col-span-3 col-span-2">
             <h4 className="text-white font-semibold text-sm mb-5 pb-2 border-b border-white/10">
               {t.contact.title}
             </h4>

@@ -64,8 +64,9 @@ export default function FleetSection({ lang }: FleetSectionProps) {
   return (
     <section
       dir={isAr ? "rtl" : "ltr"}
-      className={`relative py-24 md:py-32 overflow-hidden transition-colors duration-300 ${isDark ? "bg-[#080d14]" : "bg-slate-50"}`}
-    >
+      className={`relative py-24 md:py-32 overflow-hidden transition-colors duration-300 section-sep ${
+          isDark ? "section-dark-3" : "section-light-1"
+        }`}   >
       {/* Background */}
       <div className="absolute inset-0 pointer-events-none">
         {isDark && (

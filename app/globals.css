@@ -1,7 +1,7 @@
 ﻿@import "tailwindcss";
 
 * {
-  font-family: var(--font-cairo), var(--font-geist-sans), sans-serif;
+  font-family: var(--font-almarai), sans-serif;
 }
 
 /* Smooth scrolling */
@@ -82,3 +82,20 @@ html.dark .noise-bg::before {
 html.dark ::-webkit-scrollbar { width: 6px; }
 html.dark ::-webkit-scrollbar-track { background: #050810; }
 html.dark ::-webkit-scrollbar-thumb { background: #1a5c2a; border-radius: 3px; }
+
+/* Dark theme section alternating */
+html.dark .section-dark-1 { background-color: #060b0f; }
+html.dark .section-dark-2 { background-color: #0a0f14; }
+html.dark .section-dark-3 { background-color: #060d0a; }
+html.dark .section-dark-4 { background-color: #0d0a14; }
+
+/* Section separator */
+html.dark .section-sep {
+  border-top: 1px solid rgba(255,255,255,0.04);
+}
+
+/* Light section alternating */
+.section-light-1 { background-color: #ffffff; }
+.section-light-2 { background-color: #f8fafc; }
+.section-light-3 { background-color: #f0fdf4; }
+.section-light-4 { background-color: #fdf2f4; }

@@ -79,8 +79,9 @@ export default function ContactCTASection({ lang }: ContactCTASectionProps) {
   return (
     <section
       dir={isAr ? "rtl" : "ltr"}
-      className={`relative py-24 md:py-32 overflow-hidden transition-colors duration-300 ${isDark ? "bg-[#050810]" : "bg-slate-50"}`}
-    >
+      className={`relative py-24 md:py-32 overflow-hidden transition-colors duration-300 section-sep ${
+          isDark ? "section-dark-4" : "section-light-1"
+        }`}    >
       {/* Background */}
       <div className="absolute inset-0 pointer-events-none">
         {isDark && (
