@@ -4,6 +4,8 @@ import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import { LangProvider } from "@/lib/LangContext";
 import Footer from "@/components/layout/Footer";
+import FloatingContact from "@/components/ui/FloatingContact";
+
 
 
 const geist = Geist({
@@ -25,6 +27,7 @@ export default function RootLayout({
         <LangProvider>
           <Navbar />
           <main className="flex-1">{children}</main>
+          <FloatingContact />
           <Footer />
 
         </LangProvider>

@@ -4,6 +4,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { useLang } from "@/lib/LangContext";
 
+
+
 const content = {
   ar: {
     desc: "شريككم اللوجستي من الجيل القادم في سوريا. نقدم حلول توصيل سريعة وموثوقة لكل محافظات سوريا وإلى وجهات عالمية.",
@@ -104,9 +106,12 @@ export default function Footer() {
   const { lang, isAr } = useLang();
   const t = content[lang];
   const year = new Date().getFullYear();
+  const { isDark } = useLang();
+
+
 
   return (
-    <footer dir={isAr ? "rtl" : "ltr"} className="bg-[#0f1a12] text-white">
+    <footer dir={isAr ? "rtl" : "ltr"} className={`text-white transition-colors duration-300 ${isDark ? "bg-[#050a06]" : "bg-[#0f1a12]"}`}>
       <div className="max-w-7xl mx-auto px-6 pt-16 pb-10">
         <div className="grid md:grid-cols-2 lg:grid-cols-12 gap-10">
 

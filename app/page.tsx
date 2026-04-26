@@ -11,7 +11,7 @@ export default function Home() {
   const { lang } = useLang();
   return (
     <>
-      <HeroSection lang={lang} />
+      <HeroSection />
       <ServicesSection lang={lang} />
       <FleetSection lang={lang} />
       <WhyUsSection lang={lang} />
