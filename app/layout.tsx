@@ -3,6 +3,8 @@ import { Geist } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import { LangProvider } from "@/lib/LangContext";
+import Footer from "@/components/layout/Footer";
+
 
 const geist = Geist({
   variable: "--font-geist-sans",
@@ -23,6 +25,8 @@ export default function RootLayout({
         <LangProvider>
           <Navbar />
           <main className="flex-1">{children}</main>
+          <Footer />
+
         </LangProvider>
       </body>
     </html>

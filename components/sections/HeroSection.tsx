@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 
 interface HeroSectionProps {
   lang: "ar" | "en";
@@ -11,8 +12,7 @@ const content = {
     badge: "شركة لوجستية رائدة في سوريا",
     title: "نقل بهدف،",
     titleHighlight: "وصول بثقة",
-    description:
-      "نيو قاسيون إكسبريس — شريككم اللوجستي من الجيل القادم. نقدم حلول توصيل سريعة وموثوقة لكل محافظات سوريا وإلى وجهات عالمية.",
+    description: "نيو قاسيون إكسبريس — شريككم اللوجستي من الجيل القادم. نقدم حلول توصيل سريعة وموثوقة لكل محافظات سوريا وإلى وجهات عالمية.",
     cta: "احجز شحنة الآن",
     ctaSecondary: "تعرف علينا",
   },
@@ -20,16 +20,10 @@ const content = {
     badge: "Syria's Next-Generation Logistics Partner",
     title: "Moving With",
     titleHighlight: "Purpose",
-    description:
-      "New Qasioun Express delivers reliable, time-definite express services across Syria and to global destinations — powered by modern technology and regional expertise.",
+    description: "New Qasioun Express delivers reliable, time-definite express services across Syria and to global destinations — powered by modern technology and regional expertise.",
     cta: "Book a Shipment",
     ctaSecondary: "Learn More",
   },
-};
-
-const features = {
-  ar: ["تتبع لحظي GPS", "تغطية كل سوريا", "شحن دولي", "أمان 24/7"],
-  en: ["Live GPS Tracking", "All Syria Coverage", "International Shipping", "24/7 Security"],
 };
 
 export default function HeroSection({ lang }: HeroSectionProps) {
@@ -41,141 +35,133 @@ export default function HeroSection({ lang }: HeroSectionProps) {
       dir={isAr ? "rtl" : "ltr"}
       className="relative bg-white overflow-hidden min-h-[calc(100vh-72px)] flex items-center"
     >
-      {/* Background shapes */}
+      {/* خلفية هندسية CSS */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute -top-32 -right-32 w-[500px] h-[500px] rounded-full bg-[#1a5c2a]/5" />
-        <div className="absolute top-1/2 -left-20 w-72 h-72 rounded-full bg-[#8B1A2A]/5" />
-        <div className="absolute bottom-10 right-1/4 w-56 h-56 rounded-full bg-[#1a5c2a]/4" />
+        {/* دوائر كبيرة */}
+        <div className="absolute -top-32 -left-32 w-96 h-96 rounded-full bg-[#1a5c2a]/5" />
+        <div className="absolute top-1/2 -translate-y-1/2 -left-20 w-72 h-72 rounded-full bg-[#1a5c2a]/4" />
+        <div className="absolute -bottom-20 left-1/4 w-64 h-64 rounded-full bg-[#8B1A2A]/4" />
+        <div className="absolute top-10 left-1/3 w-48 h-48 rounded-full bg-[#1a5c2a]/3" />
+
+        {/* خطوط هندسية */}
+        <svg className="absolute inset-0 w-full h-full opacity-[0.04]" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
+              <path d="M 60 0 L 0 0 0 60" fill="none" stroke="#1a5c2a" strokeWidth="0.8"/>
+            </pattern>
+          </defs>
+          <rect width="60%" height="100%" fill="url(#grid)" />
+        </svg>
+
+        {/* نقاط زخرفية */}
+        <div className="absolute top-20 left-20 w-2 h-2 rounded-full bg-[#1a5c2a]/20" />
+        <div className="absolute top-40 left-48 w-1.5 h-1.5 rounded-full bg-[#1a5c2a]/15" />
+        <div className="absolute top-64 left-32 w-2 h-2 rounded-full bg-[#8B1A2A]/15" />
+        <div className="absolute bottom-32 left-24 w-1.5 h-1.5 rounded-full bg-[#1a5c2a]/20" />
+        <div className="absolute bottom-48 left-64 w-2 h-2 rounded-full bg-[#1a5c2a]/15" />
+        <div className="absolute top-32 left-72 w-1 h-1 rounded-full bg-[#8B1A2A]/20" />
       </div>
 
-      <div className="relative w-full max-w-7xl mx-auto px-6 py-16 md:py-24">
-        <div className="grid md:grid-cols-2 gap-16 items-center">
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-6 py-16 md:py-24">
+        <div className="grid md:grid-cols-2 gap-12 items-center md:flex md:flex-row-reverse">
 
-          {/* Text Content */}
-          <div className="flex flex-col gap-7">
+          {/* صورة — يسار على desktop، تحت على موبايل */}
+          <div className="relative flex items-center justify-center order-2 md:order-1">
+            <div className="relative w-full max-w-lg">
 
-            {/* Badge */}
+              {/* الصورة */}
+              <div className="relative rounded-3xl overflow-hidden shadow-2xl shadow-[#1a5c2a]/15">
+                <Image
+                  src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800&q=80"
+                  alt="Q Express Delivery"
+                  width={800}
+                  height={500}
+                  className="w-full h-64 md:h-80 object-cover"
+                  priority
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#1a5c2a]/40 to-transparent" />
+
+                {/* لوغو فوق الصورة */}
+                <div className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-sm rounded-xl px-3 py-2 shadow-lg">
+                  <Image
+                    src="/images/Q Express Logos-03.png"
+                    alt="Q Express"
+                    width={90}
+                    height={30}
+                    className="h-6 w-auto object-contain"
+                  />
+                </div>
+              </div>
+
+              {/* Moving With Purpose */}
+              <div className="absolute -bottom-4 -left-4 bg-white border border-gray-100 rounded-2xl px-4 py-2.5 shadow-xl">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                  <span className="text-sm font-semibold text-gray-700">Moving With Purpose</span>
+                </div>
+              </div>
+
+              {/* توصيل سريع */}
+              <div className="absolute -top-4 -right-4 bg-[#1a5c2a] rounded-2xl px-3 py-2.5 shadow-xl">
+                <div className="flex items-center gap-1.5">
+                  <svg className="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                  <span className="text-white text-xs font-semibold">
+                    {isAr ? "توصيل سريع" : "Express"}
+                  </span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          {/* النص — يمين على desktop، فوق على موبايل */}
+          <div className="flex flex-col gap-6 order-1 md:order-2">
+
             <span className="inline-flex w-fit bg-[#1a5c2a]/10 text-[#1a5c2a] text-xs font-semibold px-4 py-2 rounded-full tracking-wide">
               {t.badge}
             </span>
 
-            {/* Title */}
-            <h1 className="text-4xl md:text-5xl lg:text-[3.5rem] font-bold text-gray-900 leading-tight">
+            <h1 className="text-4xl md:text-5xl lg:text-[3.25rem] font-bold text-gray-900 leading-tight">
               {t.title}{" "}
               <span className="text-[#1a5c2a]">{t.titleHighlight}</span>
             </h1>
 
-            {/* Description */}
-            <p className="text-gray-500 text-lg leading-relaxed max-w-lg">
+            <p className="text-gray-500 text-base md:text-lg leading-relaxed">
               {t.description}
             </p>
 
-            {/* CTAs */}
-            <div className="flex flex-wrap gap-4">
+            <div className="flex flex-wrap gap-3">
               <Link
                 href="/contact"
-                className="bg-[#1a5c2a] text-white px-8 py-3.5 rounded-xl font-semibold hover:bg-[#134a20] transition-all duration-200 shadow-lg shadow-[#1a5c2a]/20"
+                className="bg-[#1a5c2a] text-white px-6 md:px-8 py-3 md:py-3.5 rounded-xl font-semibold hover:bg-[#134a20] transition-all duration-200 shadow-lg shadow-[#1a5c2a]/20 text-sm md:text-base"
               >
                 {t.cta}
               </Link>
               <Link
                 href="/about"
-                className="border border-gray-200 text-gray-700 px-8 py-3.5 rounded-xl font-semibold hover:border-[#1a5c2a] hover:text-[#1a5c2a] transition-all duration-200"
+                className="border border-gray-200 text-gray-700 px-6 md:px-8 py-3 md:py-3.5 rounded-xl font-semibold hover:border-[#1a5c2a] hover:text-[#1a5c2a] transition-all duration-200 text-sm md:text-base"
               >
                 {t.ctaSecondary}
               </Link>
             </div>
 
-            {/* Stats */}
-            <div className="flex gap-10 pt-6 border-t border-gray-100">
+            <div className="flex gap-8 pt-5 border-t border-gray-100">
               <div className="flex flex-col gap-1">
-                <span className="text-2xl font-bold text-[#1a5c2a]">24/7</span>
-                <span className="text-sm text-gray-400">
-                  {isAr ? "أمن وحماية" : "Security"}
-                </span>
+                <span className="text-xl md:text-2xl font-bold text-[#1a5c2a]">24/7</span>
+                <span className="text-xs md:text-sm text-gray-400">{isAr ? "أمن وحماية" : "Security"}</span>
               </div>
               <div className="flex flex-col gap-1">
-                <span className="text-2xl font-bold text-[#1a5c2a]">100%</span>
-                <span className="text-sm text-gray-400">
-                  {isAr ? "تغطية سوريا" : "Syria Coverage"}
-                </span>
+                <span className="text-xl md:text-2xl font-bold text-[#1a5c2a]">100%</span>
+                <span className="text-xs md:text-sm text-gray-400">{isAr ? "تغطية سوريا" : "Syria Coverage"}</span>
               </div>
               <div className="flex flex-col gap-1">
-                <span className="text-2xl font-bold text-[#1a5c2a]">2025</span>
-                <span className="text-sm text-gray-400">
-                  {isAr ? "تأسست" : "Established"}
-                </span>
+                <span className="text-xl md:text-2xl font-bold text-[#1a5c2a]">2025</span>
+                <span className="text-xs md:text-sm text-gray-400">{isAr ? "تأسست" : "Established"}</span>
               </div>
             </div>
-          </div>
 
-          {/* Visual Card */}
-          <div className="relative hidden md:flex items-center justify-center">
-            <div className="relative w-full max-w-sm">
-
-              {/* Main green card */}
-              <div className="bg-[#1a5c2a] rounded-3xl p-8 text-white shadow-2xl shadow-[#1a5c2a]/30">
-
-                {/* Card header */}
-                <div className="flex items-center gap-4 mb-8">
-                  <div className="w-12 h-12 bg-white/15 rounded-2xl flex items-center justify-center">
-                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                    </svg>
-                  </div>
-                  <div>
-                    <p className="font-semibold text-base">
-                      {isAr ? "توصيل سريع" : "Express Delivery"}
-                    </p>
-                    <p className="text-white/60 text-sm">
-                      {isAr ? "باب لباب" : "Door to Door"}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Features list */}
-                <div className="space-y-4">
-                  {features[lang].map((item) => (
-                    <div key={item} className="flex items-center gap-3">
-                      <div className="w-5 h-5 bg-white/15 rounded-full flex items-center justify-center shrink-0">
-                        <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                        </svg>
-                      </div>
-                      <span className="text-white/85 text-sm">{item}</span>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Card footer */}
-                <div className="mt-8 pt-6 border-t border-white/15 flex items-center justify-between">
-                  <span className="text-white/50 text-xs">
-                    {isAr ? "جزء من مجموعة دمسكو" : "Part of Damsco Group"}
-                  </span>
-                  <span className="bg-white/15 text-white/90 text-xs px-3 py-1 rounded-full">
-                    {isAr ? "تأسست 2025" : "Est. 2025"}
-                  </span>
-                </div>
-              </div>
-
-              {/* Floating pill - Moving With Purpose */}
-              <div className="absolute -bottom-5 -left-5 bg-white border border-gray-100 rounded-2xl px-4 py-3 shadow-xl">
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                  <span className="text-sm font-semibold text-gray-700">
-                    Moving With Purpose
-                  </span>
-                </div>
-              </div>
-
-              {/* Floating accent - top left */}
-              <div className="absolute -top-5 -right-5 bg-[#8B1A2A] rounded-2xl px-4 py-3 shadow-xl">
-                <span className="text-white text-xs font-semibold">
-                  {isAr ? "شحن دولي" : "International"}
-                </span>
-              </div>
-
-            </div>
           </div>
 
         </div>
