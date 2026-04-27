@@ -136,7 +136,9 @@ export default function HeroSection() {
         {/* Overlay */}
         <div className={`absolute inset-0 ${
           isDark
-            ? "bg-gradient-to-l from-[#050810] via-[#050810]/92 to-[#050810]/60"
+            ? isAr
+              ? "bg-gradient-to-l from-[#050810] via-[#050810]/92 to-[#050810]/60"
+              : "bg-gradient-to-r from-[#050810] via-[#050810]/92 to-[#050810]/60"
             : isAr
               ? "bg-gradient-to-l from-white/98 via-white/88 to-white/40 md:from-white md:via-white/82 md:to-white/30"
               : "bg-gradient-to-r from-white/98 via-white/88 to-white/40 md:from-white md:via-white/82 md:to-white/30"
