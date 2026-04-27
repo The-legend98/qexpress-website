@@ -98,7 +98,7 @@ function HeroGallery({ isAr }: { isAr: boolean }) {
   const [cur, setCur] = useState(0);
   const [prevIdx, setPrevIdx] = useState<number | null>(null);
   const [going, setGoing] = useState(false);
-  const timer = useRef<ReturnType<typeof setTimeout>>();
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const goTo = useCallback((i: number) => {
     if (going || i === cur) return;
@@ -109,7 +109,12 @@ function HeroGallery({ isAr }: { isAr: boolean }) {
   const nxt = useCallback(() => goTo((cur + 1) % GALLERY_PHOTOS.length), [cur, goTo]);
   const prv = useCallback(() => goTo((cur - 1 + GALLERY_PHOTOS.length) % GALLERY_PHOTOS.length), [cur, goTo]);
 
-  useEffect(() => { timer.current = setTimeout(nxt, 4200); return () => clearTimeout(timer.current); }, [cur, nxt]);
+useEffect(() => {
+  timer.current = setTimeout(nxt, 3000);
+  return () => {
+    if (timer.current) clearTimeout(timer.current);
+  };
+}, [cur, nxt]);
 
   return (
     <div className="relative w-full h-full rounded-3xl overflow-hidden">
