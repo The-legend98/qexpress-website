@@ -91,6 +91,7 @@ export default function ContactCTASection({ lang }: ContactCTASectionProps) {
           </>
         )}
       </div>
+      {/* Decorative logistics icons */}
 
       <div className="relative max-w-7xl mx-auto px-6">
 
