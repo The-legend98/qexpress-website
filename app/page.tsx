@@ -7,6 +7,9 @@ import FleetSection from "@/components/sections/FleetSection";
 import WhyUsSection from "@/components/sections/WhyUsSection";
 import ContactCTASection from "@/components/sections/ContactCTASection";
 import SectionDivider from "@/components/ui/SectionDivider";
+import TrackingSection from "@/components/sections/TrackingSection";
+import ShippingCalculator from "@/components/sections/ShippingCalculator";
+
 
 
 export default function Home() {
@@ -14,6 +17,8 @@ export default function Home() {
   return (
     <>
       <HeroSection />
+      <TrackingSection />
+      <ShippingCalculator />
       <SectionDivider />
       <ServicesSection lang={lang} />
       <SectionDivider />
