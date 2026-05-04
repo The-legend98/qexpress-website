@@ -3,6 +3,7 @@
 import { useLang } from "@/lib/LangContext";
 import Image from "next/image";
 import { useEffect, useRef, useState, useCallback } from "react";
+import CEOPage from "@/app/ceo/page";
 
 const GALLERY_PHOTOS = [
   "/images/g-1.png",
@@ -191,7 +192,7 @@ export default function AboutPage() {
   const { lang, isAr, isDark } = useLang();
   const t = content[lang];
   const heroIn    = useInView(0.05);
-  const missionIn = useInView(0.12);
+  // const missionIn = useInView(0.12);
   const valuesIn  = useInView(0.08);
   const techIn    = useInView(0.08);
 
@@ -287,7 +288,8 @@ export default function AboutPage() {
       </section>
 
       {/* ══ MISSION ══ */}
-      <section
+
+      {/* <section
         className={`py-24 relative overflow-hidden`}
         ref={missionIn.ref}
         style={isDark ? {background:"#080d14"} : {background:`linear-gradient(160deg,#fdf8f8 0%,#f6faf7 50%,#fdf8f8 100%)`}}
@@ -359,7 +361,10 @@ export default function AboutPage() {
             </TiltCard>
           </div>
         </div>
-      </section>
+      </section> */}
+      
+      {/* CEO Page Render Here as a section */}
+      <CEOPage />
 
       {/* ══ VALUES ══ */}
       <section

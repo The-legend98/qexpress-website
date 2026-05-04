@@ -34,7 +34,7 @@ const content = {
       phone: "+963 11 XXX XXXX",
     },
     rights: "جميع الحقوق محفوظة",
-    part: "جزء من مجموعة دمسكو",
+    // part: "جزء من مجموعة دمسكو",
     follow: "تابعونا",
   },
   en: {
@@ -64,7 +64,7 @@ const content = {
       phone: "+963 11 XXX XXXX",
     },
     rights: "All rights reserved",
-    part: "Part of Damsco Group",
+    // part: "Part of Damsco Group",
     follow: "Follow Us",
   },
 };
@@ -132,7 +132,7 @@ export default function Footer() {
             </p>
             <div className="inline-flex items-center gap-2 bg-[#1a5c2a]/25 border border-[#1a5c2a]/40 rounded-xl px-4 py-2 mb-6">
               <div className="w-2 h-2 rounded-full bg-[#4ade80] animate-pulse" />
-              <span className="text-[#4ade80] text-xs font-semibold">{t.part}</span>
+              {/* <span className="text-[#4ade80] text-xs font-semibold">{t.part}</span> */}
             </div>
             <div>
               <p className="text-gray-500 text-xs mb-3">{t.follow}</p>
@@ -239,7 +239,7 @@ export default function Footer() {
           </p>
           <div className="flex items-center gap-1.5">
             <div className="w-1.5 h-1.5 rounded-full bg-[#1a5c2a]" />
-            <span className="text-gray-600 text-xs">{t.part}</span>
+            {/* <span className="text-gray-600 text-xs">{t.part}</span> */}
           </div>
         </div>
       </div>

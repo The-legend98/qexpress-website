@@ -33,6 +33,7 @@ export default function RootLayout({
     <html lang="ar" dir="rtl" className={`${almarai.variable} h-full antialiased`}>
       <body className={`${almarai.variable} min-h-full flex flex-col bg-white text-gray-900 font-[family-name:var(--font-almarai)]`}>
         <LangProvider>
+          
           <Navbar />
           <main className="flex-1">{children}</main>
           <FloatingContact />
