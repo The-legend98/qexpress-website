@@ -382,7 +382,9 @@ export default function ContactPage() {
                     {t.info.items.slice(1, 3).map((item) => (
                       <div key={item.label} className="flex items-center justify-between text-sm">
                         <span className="text-white/50">{item.label}</span>
-                        <span className="font-bold text-white">{item.value}</span>
+                        <span className="font-bold text-white" dir="ltr">
+                          {item.value}
+                        </span>
                       </div>
                     ))}
                   </div>
