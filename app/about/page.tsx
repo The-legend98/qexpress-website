@@ -15,6 +15,7 @@ const GALLERY_PHOTOS = [
 const G = "#1a5c2a";
 const M = "#8B1A2A";
 
+
 const content = {
   ar: {
     hero: { badge:"من نحن", title:"نيو قاسيون إكسبريس", subtitle:"شريك لوجستي من الجيل القادم",
@@ -288,7 +289,6 @@ export default function AboutPage() {
       </section>
 
       {/* ══ MISSION ══ */}
-
       {/* <section
         className={`py-24 relative overflow-hidden`}
         ref={missionIn.ref}
@@ -368,10 +368,12 @@ export default function AboutPage() {
 
       {/* ══ VALUES ══ */}
       <section
+      // 0A1020 lighter than the used 1 deg
         className={`py-24 relative overflow-hidden ${isDark ? "bg-[#050810]" : "bg-white"}`}
         ref={valuesIn.ref}
       >
         <div className="absolute pointer-events-none" style={{ width:600, height:600, borderRadius:"50%", top:"50%", [isAr?"right":"left"]:"50%", transform:"translate(-50%,-50%)", background:`radial-gradient(circle,${M}${isDark?"08":"04"} 0%,transparent 60%)` }}/>
+        
         <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage:`repeating-linear-gradient(${isAr?"-":""}45deg,${M}08 0,${M}08 1px,transparent 0,transparent 50%)`, backgroundSize:"30px 30px", opacity: isDark ? 0.2 : 0.5 }}/>
 
         <div className="relative max-w-7xl mx-auto px-6">

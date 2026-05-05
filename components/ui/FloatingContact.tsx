@@ -3,21 +3,21 @@
 import { useState } from "react";
 import { useLang } from "@/lib/LangContext";
 
-const PHONE = "+963XXXXXXXXX";
-const WHATSAPP = "963XXXXXXXXX";
+const PHONE = "+963119290";
+// const WHATSAPP = "963XXXXXXXXX";
 
 export default function FloatingContact() {
   const { isAr } = useLang();
   const [expanded, setExpanded] = useState(false);
 
-  const openWhatsApp = () => window.open(`https://wa.me/${WHATSAPP}`, "_blank");
+  // const openWhatsApp = () => window.open(`https://wa.me/${WHATSAPP}`, "_blank");
   const openCall = () => window.open(`tel:${PHONE}`);
 
   return (
     <div className={`fixed bottom-6 z-50 flex flex-col items-center gap-3 ${isAr ? "left-4" : "right-4"}`}>
 
       {/* WhatsApp Button */}
-      <button
+      {/* <button
         onClick={openWhatsApp}
         aria-label="WhatsApp"
         className={`group relative w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg transition-all duration-300 hover:-translate-y-1 ${expanded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"}`}
@@ -28,7 +28,7 @@ export default function FloatingContact() {
           <path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.124 1.533 5.854L0 24l6.29-1.51A11.935 11.935 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.002-1.366l-.36-.214-3.733.897.933-3.625-.235-.373A9.818 9.818 0 012.182 12C2.182 6.57 6.57 2.182 12 2.182S21.818 6.57 21.818 12 17.43 21.818 12 21.818z" />
         </svg>
        
-      </button>
+      </button> */}
 
       {/* Call Button */}
       <button
