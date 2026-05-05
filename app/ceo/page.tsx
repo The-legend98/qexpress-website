@@ -325,7 +325,7 @@ export default function CEOPage() {
         <div className="absolute pointer-events-none" style={{ top: "42%", [isAr ? "right" : "left"]: "7%", width: 11, height: 11, borderRadius: 3, background: `${M}28`, transform: "rotate(45deg)", animation: "ceo-floatb 8s ease-in-out infinite" }} />
 
         <div className="relative max-w-7xl mx-auto px-6">
-          <div className="grid md:grid-cols-2 gap-14 items-center">
+          <div className="flex flex-col-reverse md:grid md:grid-cols-2 gap-10 md:gap-14 items-center">
 
             {/* TEXT */}
             <div>
@@ -383,18 +383,35 @@ export default function CEOPage() {
               )}
             </div>
 
-            {/* PHOTO */}
-            <div className="relative hidden md:flex justify-center" style={heroIn.visible ? a("ceo-scalein", 0.1, 0.85) : { opacity: 0 }}>
-              <div className="absolute inset-0 rounded-[40px]" style={{ background: `linear-gradient(135deg,${M}18,${G}0a)`, transform: "translate(14px,14px)" }} />
-              <div className="absolute inset-0 rounded-[38px]" style={{ background: `linear-gradient(135deg,${G}0c,${M}08)`, transform: "translate(7px,7px)" }} />
-              <div className="relative rounded-[32px] overflow-hidden" style={{ width: 380, height: 480, boxShadow: `0 40px 80px -16px ${M}30` }}>
-                <Image src={CEO_PHOTO} alt={t.hero.name} fill className="object-cover object-top" />
-                <div className="absolute inset-0" style={{ background: `linear-gradient(to top,${M}65 0%,transparent 55%)` }} />
-                <div className="absolute bottom-0 left-0 right-0 px-6 pb-6">
-                  <div className="rounded-2xl px-5 py-4" style={{ background: "rgba(255,255,255,0.13)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.22)" }}>
-                    <p className="text-white font-black text-base leading-tight">{t.hero.name}</p>
+            {/* PHOTO — visible on all screens */}
+            <div
+              className="relative flex justify-center w-full"
+              style={heroIn.visible ? a("ceo-fadeup", 0.05, 0.7) : { opacity: 0 }}
+            >
+              {/* Depth shadow cards — only on md+ to avoid overflow on mobile */}
+              <div className="absolute inset-0 rounded-[28px] md:rounded-[40px] hidden md:block" style={{ background: `linear-gradient(135deg,${M}18,${G}0a)`, transform: "translate(14px,14px)" }} />
+              <div className="absolute inset-0 rounded-[26px] md:rounded-[38px] hidden md:block" style={{ background: `linear-gradient(135deg,${G}0c,${M}08)`, transform: "translate(7px,7px)" }} />
+
+              {/* Photo frame — full width on mobile, fixed size on desktop */}
+              <div
+                className="relative w-full md:w-[380px] rounded-[24px] md:rounded-[32px] overflow-hidden"
+                style={{ height: "min(72vw, 480px)", boxShadow: `0 24px 60px -12px ${M}35` }}
+              >
+                <Image
+                  src={CEO_PHOTO}
+                  alt={t.hero.name}
+                  fill
+                  className="object-cover object-top"
+                  priority
+                />
+                <div className="absolute inset-0" style={{ background: `linear-gradient(to top,${M}70 0%,transparent 50%)` }} />
+
+                {/* Name card overlay */}
+                <div className="absolute bottom-0 left-0 right-0 px-4 pb-4 md:px-6 md:pb-6">
+                  <div className="rounded-xl md:rounded-2xl px-4 py-3 md:px-5 md:py-4" style={{ background: "rgba(255,255,255,0.13)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.22)" }}>
+                    <p className="text-white font-black text-sm md:text-base leading-tight">{t.hero.name}</p>
                     <p className="text-white/70 text-xs mt-1 font-semibold tracking-wide">{t.hero.role}</p>
-                    <div className="flex items-center gap-2 mt-2.5">
+                    <div className="flex items-center gap-2 mt-2">
                       <span className="relative flex h-2 w-2">
                         <span className="absolute inset-0 rounded-full opacity-60" style={{ background: G, animation: "ceo-ping 1.6s ease-in-out infinite" }} />
                         <span className="relative rounded-full h-2 w-2" style={{ background: G }} />
@@ -404,18 +421,12 @@ export default function CEOPage() {
                   </div>
                 </div>
               </div>
-              <div className="absolute -top-6 -end-6 w-14 h-14 rounded-full border-2 flex items-center justify-center" style={{ borderColor: `${M}35`, animation: "ceo-float 5s ease-in-out infinite" }}>
-                <div className="w-5 h-5 rounded-full" style={{ background: `${M}55` }} />
-              </div>
-              <div className="absolute -bottom-4 -start-4 w-10 h-10 rounded-full border-2" style={{ borderColor: `${G}30`, animation: "ceo-float 7s ease-in-out infinite reverse" }} />
-              <div className="absolute inset-0 rounded-[32px] pointer-events-none" style={{ border: `1px solid ${M}15`, animation: "ceo-spin 20s linear infinite" }} />
             </div>
           </div>
         </div>
       </section>
 
       {/* ══════════════════════ QUOTE ══════════════════════ */}
-      {/* Quote section is always maroon-based — looks great in both modes */}
       <section
         className="py-24 relative overflow-hidden"
         style={{ background: isDark ? `linear-gradient(150deg,#1a0508 0%,#3d0a12 60%,#120205 100%)` : `linear-gradient(150deg,${M} 0%,#5c0f1b 60%,#3a0510 100%)` }}
