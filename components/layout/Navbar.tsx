@@ -67,9 +67,7 @@ export default function Navbar() {
               width={130}
               height={44}
               loading="eager"
-
-              className="h-11 w-auto object-contain mb-5"
-
+              className="h-11 w-auto object-contain "
             />
             <div className="absolute inset-0 bg-[#1a5c2a]/10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-full" />
           </Link>
