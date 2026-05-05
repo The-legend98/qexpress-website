@@ -57,8 +57,8 @@ const content = {
       title: "معلومات التواصل",
       items: [
         { label: "العنوان", value: "أبو رمانة، دمشق، سوريا", icon: "location" },
-        { label: "الهاتف", value: "+963 11 XXX XXXX", icon: "phone" },
-        { label: "البريد الإلكتروني", value: "info@qexpress.sy", icon: "email" },
+        { label: "الهاتف", value: "+963 11 9290", icon: "phone" },
+        { label: "البريد الإلكتروني", value: "info@qexpress-sy.com", icon: "email" },
         { label: "ساعات العمل", value: "الأحد - الخميس: 8ص - 6م", icon: "clock" },
       ],
       follow: "تابعونا على منصاتنا",
@@ -95,8 +95,8 @@ const content = {
       title: "Contact Information",
       items: [
         { label: "Address", value: "Abu Rummaneh, Damascus, Syria", icon: "location" },
-        { label: "Phone", value: "+963 11 XXX XXXX", icon: "phone" },
-        { label: "Email", value: "info@qexpress.sy", icon: "email" },
+        { label: "Phone", value: "+963 11 9290", icon: "phone" },
+        { label: "Email", value: "info@qexpress-sy.com", icon: "email" },
         { label: "Working Hours", value: "Sun - Thu: 8AM - 6PM", icon: "clock" },
       ],
       follow: "Follow Our Channels",

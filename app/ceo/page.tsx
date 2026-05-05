@@ -413,8 +413,7 @@ export default function CEOPage() {
               {/* Photo frame — full width on mobile, fixed size on desktop */}
               <div
                 className="relative w-full md:w-[380px] rounded-[24px] md:rounded-[32px] overflow-hidden"
-  // زدنا الارتفاع في الموبايل من 72vw لـ 110vw ليظهر الجسم والرأس بشكل أفضل
-  style={{ height: "aspect-ratio: 4/5", minHeight: "450px", boxShadow: `0 24px 60px -12px ${M}35` }}
+                style={{ height: "aspect-ratio: 4/5", minHeight: "450px", boxShadow: `0 24px 60px -12px ${M}35` }}
               >
                 <Image
                   src={CEO_PHOTO}
