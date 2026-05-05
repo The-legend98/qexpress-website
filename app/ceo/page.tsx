@@ -177,6 +177,8 @@ function useInView(threshold = 0.1) {
 function TiltCard({
   children,
   className = "",
+  onMouseEnter, // تم حذف التعريف من هنا لأنه يجب أن يكون في الأسفل
+  onMouseLeave,
   style = {},
   glowColor = "",
 }: {
@@ -184,8 +186,12 @@ function TiltCard({
   className?: string;
   style?: React.CSSProperties;
   glowColor?: string;
+  // يجب إضافة التعريفين هنا لتجنب الخطأ
+  onMouseEnter?: React.MouseEventHandler<HTMLElement>;
+  onMouseLeave?: React.MouseEventHandler<HTMLElement>;
 }) {
   const ref = useRef<HTMLDivElement>(null);
+
   const onMove = (e: React.MouseEvent) => {
     const el = ref.current;
     if (!el) return;
@@ -194,19 +200,31 @@ function TiltCard({
     const y = ((e.clientY - r.top) / r.height - 0.5) * -12;
     el.style.transform = `perspective(900px) rotateX(${y}deg) rotateY(${x}deg) translateZ(10px)`;
     if (glowColor) el.style.boxShadow = `0 24px 60px -10px ${glowColor}40, 0 0 0 1px ${glowColor}15`;
+    
+    // إذا كنت تريد تشغيل الـ props الممررة أيضاً:
+    if (onMouseEnter) onMouseEnter(e as any); 
   };
-  const onLeave = () => {
+
+  const onLeave = (e: React.MouseEvent) => {
     if (!ref.current) return;
     ref.current.style.transform = "";
     if (glowColor) ref.current.style.boxShadow = "";
+    
+    // تشغيل الـ props الممررة عند الخروج
+    if (onMouseLeave) onMouseLeave(e as any);
   };
+
   return (
     <div
       ref={ref}
       onMouseMove={onMove}
       onMouseLeave={onLeave}
       className={className}
-      style={{ transition: "transform 0.2s ease-out, box-shadow 0.3s ease", transformStyle: "preserve-3d", ...style }}
+      style={{ 
+        transition: "transform 0.2s ease-out, box-shadow 0.3s ease", 
+        transformStyle: "preserve-3d", 
+        ...style 
+      }}
     >
       {children}
     </div>
