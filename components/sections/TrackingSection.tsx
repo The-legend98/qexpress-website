@@ -128,7 +128,8 @@ export default function TrackingSection() {
         <div className={`rounded-2xl p-6 border transition-colors duration-300 ${
           isDark ? "bg-[#0d1421] border-white/6" : "bg-white border-gray-100 shadow-sm"
         }`}>
-          <div className="flex gap-3">
+          <div className="flex flex-col sm:flex-row gap-3">
+
             <input
               type="text"
               value={trackingNumber}
@@ -136,18 +137,18 @@ export default function TrackingSection() {
               onKeyDown={(e) => e.key === "Enter" && handleTrack()}
               placeholder={t.placeholder}
               dir="ltr"
-              className={`flex-1 px-4 py-3.5 rounded-xl border text-sm font-medium transition-all focus:outline-none focus:ring-2 focus:ring-[#1a5c2a]/30 ${
-                isDark
-                  ? "bg-[#050810] border-white/8 text-white placeholder-slate-600 focus:border-[#1a5c2a]/50"
-                  : "bg-gray-50 border-gray-200 text-gray-800 focus:border-[#1a5c2a] focus:bg-white"
-              }`}
+               className={`flex-1 px-4 py-3.5 rounded-xl border text-sm font-medium transition-all focus:outline-none focus:ring-2 focus:ring-[#1a5c2a]/30 ${
+                  isDark
+                    ? "bg-[#050810] border-white/8 text-white placeholder-slate-600 focus:border-[#1a5c2a]/50"
+                    : "bg-gray-50 border-gray-200 text-gray-800 focus:border-[#1a5c2a] focus:bg-white"
+                }`}
             />
             <button
-              onClick={handleTrack}
-              disabled={loading || !trackingNumber.trim()}
-              className="relative overflow-hidden group px-6 py-3.5 rounded-xl font-bold text-sm text-white transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed hover:-translate-y-0.5"
-              style={{ background: "linear-gradient(135deg,#1a5c2a,#134a20)", boxShadow: "0 4px 20px rgba(26,92,42,0.3)" }}
-            >
+                onClick={handleTrack}
+                disabled={loading || !trackingNumber.trim()}
+                className="relative overflow-hidden group px-6 py-3.5 rounded-xl font-bold text-sm text-white transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed hover:-translate-y-0.5 w-full sm:w-auto"
+                style={{ background: "linear-gradient(135deg,#1a5c2a,#134a20)", boxShadow: "0 4px 20px rgba(26,92,42,0.3)" }}
+              >
               <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
               <span className="relative">{loading ? t.loading : t.btn}</span>
             </button>
