@@ -41,10 +41,29 @@ const content = {
 };
 
 const socials = [
-  { id: "fb", label: "Facebook", icon: <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z" /></svg> },
-  { id: "ig", label: "Instagram", icon: <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" /></svg> },
-  { id: "li", label: "LinkedIn", icon: <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-4 0v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z" /><circle cx="4" cy="4" r="2" /></svg> },
+  { 
+    id: "fb", 
+    href: "https://www.facebook.com/people/Q-Express/61588982938511/", 
+    label: "Facebook", 
+    brandColor: "#1877F2",
+    icon: <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z" /></svg> 
+  },
+  { 
+    id: "ig", 
+    href: "https://www.instagram.com/q_express_sy/", 
+    label: "Instagram", 
+    brandColor: "#E4405F",
+    icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" /></svg> 
+  },
+  { 
+    id: "li", 
+    href: "https://www.linkedin.com/company/qexpress-sy/", 
+    label: "LinkedIn", 
+    brandColor: "#0A66C2",
+    icon: <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-4 0v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z" /><circle cx="4" cy="4" r="2" /></svg> 
+  },
 ];
+
 
 const contactItems = (t: typeof content.ar, isAr: boolean) => [
   {
@@ -216,26 +235,45 @@ export default function ContactCTASection({ lang }: ContactCTASectionProps) {
                 </div>
               </div>
 
-              {/* Social */}
-              <div className={`pt-6 border-t mt-6 ${isDark ? "border-white/5" : "border-gray-100"}`}>
-                <p className={`text-xs mb-4 ${isDark ? "text-slate-500" : "text-slate-400"}`}>{t.follow}</p>
-                <div className="flex gap-2">
-                  {socials.map((s) => (
-                      <a
-                      key={s.id}
-                      href="#"
-                      aria-label={s.label}
-                      className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-200 hover:-translate-y-0.5 ${
-                        isDark
-                          ? "bg-white/5 border border-white/8 text-slate-400 hover:bg-[#1a5c2a] hover:text-white hover:border-[#1a5c2a] hover:shadow-[0_0_15px_rgba(26,92,42,0.4)]"
-                          : "bg-gray-50 border border-gray-100 text-gray-400 hover:bg-[#1a5c2a] hover:text-white hover:border-[#1a5c2a] hover:shadow-md"
-                      }`}
-                    >
+          {/* Social Section */}
+            <div className={`pt-6 border-t mt-6 ${isDark ? "border-white/5" : "border-gray-100"}`}>
+              <p className={`text-xs mb-4 ${isDark ? "text-slate-500" : "text-slate-400"}`}>
+                {t.follow}
+              </p>
+              <div className="flex gap-3">
+                {socials.map((s) => (
+                  <a
+                    key={s.id}
+                    href={s.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={s.label}
+                    className={`w-11 h-11 rounded-xl flex items-center justify-center transition-all duration-300 hover:-translate-y-1 group ${
+                      isDark
+                        ? "bg-white/5 border border-white/8 text-slate-400"
+                        : "bg-gray-50 border border-gray-100 text-gray-400"
+                    }`}
+                    // هنا السحر: يتغير لون الخلفية والحدود للون البراند الرسمي عند الـ Hover
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = s.brandColor;
+                      e.currentTarget.style.borderColor = s.brandColor;
+                      e.currentTarget.style.color = "white";
+                      e.currentTarget.style.boxShadow = `0 10px 20px -5px ${s.brandColor}66`;
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = "";
+                      e.currentTarget.style.borderColor = "";
+                      e.currentTarget.style.color = "";
+                      e.currentTarget.style.boxShadow = "";
+                    }}
+                  >
+                    <span className="transition-transform duration-300 group-hover:scale-110">
                       {s.icon}
-                    </a>
-                  ))}
-                </div>
+                    </span>
+                  </a>
+                ))}
               </div>
+            </div>
             </div>
           </AnimatedSection>
 

@@ -76,7 +76,7 @@ const content = {
 const socials = [
   {
     id: "fb",
-    href: "#",
+    href: "https://www.facebook.com/people/Q-Express/61588982938511/",
     icon: (
       <svg className="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
         <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z" />
@@ -85,7 +85,7 @@ const socials = [
   },
   {
     id: "ig",
-    href: "#",
+    href: "https://www.instagram.com/q_express_sy/",
     icon: (
       <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
         <rect x="2" y="2" width="20" height="20" rx="5" />
@@ -96,7 +96,7 @@ const socials = [
   },
   {
     id: "li",
-    href: "#",
+    href: "https://www.linkedin.com/company/qexpress-sy/",
     icon: (
       <svg className="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
         <path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-4 0v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z" />

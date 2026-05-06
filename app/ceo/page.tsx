@@ -627,28 +627,39 @@ export default function CEOPage() {
             </div>
           )}
 
-          <div className="grid sm:grid-cols-1 gap-5 mb-10">
+         <div className="flex justify-center mb-10">
             {t.contact.items.map((item, i) => {
               const ac = i % 2 === 0 ? G : M;
               return (
                 <TiltCard key={item.label} glowColor={ac}
-                  className="ceo-shimmer rounded-2xl p-6 border-2 text-center cursor-default relative overflow-hidden"
-                  style={{ background: cardBg, borderColor: `${ac}${isDark ? "25" : "18"}`, ...(contactIn.visible ? a("ceo-rotatein", 0.1 + i * 0.1, 0.68) : { opacity: 0 }) }}>
-                  <div className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4" style={{ background: `${ac}${isDark ? "20" : "10"}` }}>
-                    {item.icon === "phone"
-                      ? <svg className="w-5 h-5" style={{ color: ac }} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
-                      : <svg className="w-5 h-5" style={{ color: ac }} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
-                    }
+                  
+                  className="ceo-shimmer rounded-2xl p-8 border-2 text-center cursor-default relative overflow-hidden w-full max-w-md"
+                  style={{ 
+                    background: cardBg, 
+                    borderColor: `${ac}${isDark ? "25" : "18"}`, 
+                    ...(contactIn.visible ? a("ceo-rotatein", 0.1, 0.68) : { opacity: 0 }) 
+                  }}>
+                  
+                  <div className="w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-5" style={{ background: `${ac}${isDark ? "20" : "10"}` }}>
+                    <svg className="w-6 h-6" style={{ color: ac }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
                   </div>
-                  <p className="text-[10px] font-black tracking-widest uppercase mb-2" style={{ color: `${ac}${isDark ? "90" : "70"}` }}>{item.label}</p>
-                  <p className="font-black text-sm" style={{ color: headingCol }} dir="ltr">{item.value}</p>
-                  <div className="absolute bottom-0 start-0 end-0 h-[2px] overflow-hidden rounded-b-2xl">
-                    <div className="h-full w-2/5" style={{ background: `linear-gradient(90deg,transparent,${ac}55,transparent)`, animation: contactIn.visible ? `ceo-shimmer 3s ${i * 0.5}s ease-in-out infinite` : undefined }} />
+
+                  <p className="text-[11px] font-black tracking-[0.2em] uppercase mb-2" style={{ color: `${ac}${isDark ? "90" : "70"}` }}>
+                    {item.label}
+                  </p>
+                  <p className="font-black text-base md:text-lg" style={{ color: headingCol }} dir="ltr">
+                    {item.value}
+                  </p>
+
+                  <div className="absolute bottom-0 start-0 end-0 h-[3px] overflow-hidden rounded-b-2xl">
+                    <div className="h-full w-2/5" style={{ background: `linear-gradient(90deg,transparent,${ac}55,transparent)`, animation: `ceo-shimmer 3s ease-in-out infinite` }} />
                   </div>
-                </TiltCard>
-              );
-            })}
-          </div>
+                    </TiltCard>
+                  );
+                })}
+            </div>
 
           {contactIn.visible && (
             <div className="text-center" style={a("ceo-fadeup", 0.5, 0.6)}>

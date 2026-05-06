@@ -24,8 +24,8 @@ const content = {
     networkTitle: "شبكتنا الإقليمية",
     partners: [
       { name: "مجموعة دامسكو", role: "سوريا", color: "green" },
-      { name: "GCL الأردن", role: "", color: "maroon" },
-      { name: "D2D دبي", role: "", color: "green" },
+      { name: "GCSS الأردن", role: "خدمات الشحن المركزية العالمية", color: "maroon" },
+      { name: "D2D دبي", role: "الإمارات العربية المتحدة", color: "green" },
     ],
   },
   en: {
@@ -41,9 +41,9 @@ const content = {
     ],
     networkTitle: "Our Regional Network",
     partners: [
-      { name: "Damsco Group", role: "Parent Group — Syria", color: "green" },
-      { name: "GCL Jordan", role: "", color: "maroon" },
-      { name: "D2D Dubai", role: "", color: "green" },
+      { name: "Damsco Group", role: " Syria", color: "green" },
+      { name: "GCSS Jordan", role: "Global Central Shipping Services", color: "maroon" },
+      { name: "D2D Dubai", role: "Dubai - United Arab Emirates", color: "green" },
     ],
   },
 };
