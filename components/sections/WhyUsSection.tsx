@@ -24,8 +24,12 @@ const content = {
     networkTitle: "شبكتنا الإقليمية",
     partners: [
       { name: "مجموعة دامسكو", role: "سوريا", color: "green" },
-      { name: "GCSS الأردن", role: "خدمات الشحن المركزية العالمية", color: "maroon" },
+      { name: "GCSS الأردن", role: "خدمات الشحن المركزية العالمية", color: "green" },
       { name: "D2D دبي", role: "الإمارات العربية المتحدة", color: "green" },
+      { name: "شركة المركزية للصرافة", role: "الركيزة المالية الموثوقة للمجموعة.", color: "maroon" },
+      { name: "جلوبال سنترال جنرال تريدنغ", role: "مركز العمليات التجارية الدولية العابرة للحدود.", color: "maroon" },
+      { name: "شادن للتجارة الدولية", role: "بوابة المجموعة نحو مشهد التجارة العالمية", color: "maroon" },
+
     ],
   },
   en: {
@@ -42,9 +46,12 @@ const content = {
     networkTitle: "Our Regional Network",
     partners: [
       { name: "Damsco Group", role: " Syria", color: "green" },
-      { name: "GCSS Jordan", role: "Global Central Shipping Services", color: "maroon" },
+      { name: "GCSS Jordan", role: "Global Central Shipping Services", color: "green" },
       { name: "D2D Dubai", role: "Dubai - United Arab Emirates", color: "green" },
-    ],
+      { name: "Al Markaziya Exchange",  role: "The group's trusted financial pillar.", color: "maroon" },
+      { name: "Global Central General Trading FZCO", role: "Hub for international cross-border trade." , color: "maroon" },
+      { name: "Shaden International Trading",  role: "The group’s gateway to global trade.", color: "maroon" },
+],
   },
 };
 
