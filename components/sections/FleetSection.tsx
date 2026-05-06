@@ -200,53 +200,58 @@ export default function FleetSection({ lang }: FleetSectionProps) {
         </div>
 
         {/* Stats Bar */}
-        <AnimatedSection delay={300}>
-          <div
-            className={`relative rounded-3xl overflow-hidden p-8 ${
-              isDark
-                ? "bg-gradient-to-r from-[#0d1421] via-[#0f1a12] to-[#0d1421] border border-white/5"
-                : "bg-gradient-to-r from-[#1a5c2a] to-[#134a20]"
-            }`}
-            style={
-              isDark
-                ? { boxShadow: "0 0 60px rgba(26,92,42,0.08), inset 0 1px 0 rgba(255,255,255,0.05)" }
-                : { boxShadow: "0 16px 48px rgba(26,92,42,0.3)" }
-            }
-          >
-            {isDark && (
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-px bg-gradient-to-r from-transparent via-[#1a5c2a]/60 to-transparent" />
-            )}
+ <AnimatedSection delay={300}>
+  <div
+    className={`relative rounded-[1.5rem] overflow-hidden p-6 border transition-all duration-500 ${
+      isDark
+        ? "bg-[#0d1421]/40 border-white/5 backdrop-blur-xl"
+        : "bg-gradient-to-br from-[#1a5c2a] to-[#0d3318] border-white/10 shadow-xl"
+    }`}
+  >
+    {/* تأثيرات الإضاءة الخلفية - تم تصغيرها لتناسب الحجم الجديد */}
+    <div className="absolute -top-16 -left-16 w-48 h-48 bg-[#4ade80]/10 blur-[60px] rounded-full" />
+    <div className="absolute -bottom-16 -right-16 w-48 h-48 bg-[#1a5c2a]/20 blur-[60px] rounded-full" />
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-              {t.stats.map((stat, i) => (
-                <div
-                  key={stat.label}
-                  className={`text-center py-2 ${
-                    i < 3
-                      ? isDark
-                        ? `md:border-${isAr ? "l" : "r"} md:border-white/5`
-                        : `md:border-${isAr ? "l" : "r"} md:border-white/20`
-                      : ""
-                  }`}
-                >
-                  <div
-                    className={`text-3xl md:text-4xl font-bold mb-1 ${
-                      isDark
-                        ? i % 2 === 0 ? "gradient-text-green" : "gradient-text-maroon"
-                        : "text-white"
-                    }`}
-                  >
-                    {stat.num}
-                  </div>
-                  <div className={`text-sm ${isDark ? "text-slate-500" : "text-white/70"}`}>
-                    {stat.label}
-                  </div>
-                </div>
-              ))}
+    <div className="relative grid grid-cols-2 md:grid-cols-4 gap-4">
+      {t.stats.map((stat, i) => (
+        <div
+          key={stat.label}
+          className={`relative group text-center px-2 transition-transform duration-300 hover:scale-105 ${
+            i < 3 ? "md:border-e md:border-white/10" : ""
+          }`}
+        >
+          {/* تصغير حجم الخط من 4xl إلى 3xl */}
+          <div
+            className={`text-2xl md:text-3xl font-black mb-1 tracking-tight transition-colors duration-300 ${
+              isDark
+                ? "bg-gradient-to-b from-white to-white/60 bg-clip-text text-transparent"
+                : "text-white"
+            }`}
+          >
+            {stat.num}
+          </div>
+          
+          <div className="flex flex-col items-center gap-0.5">
+            <span className={`text-[8px] font-bold tracking-[0.2em] ${
+              isDark ? "text-[#4ade80]" : "text-white/40"
+            }`}>
+              ●
+            </span>
+            {/* تصغير حجم نص التسمية */}
+            <div className={`text-[11px] font-medium leading-tight ${
+              isDark ? "text-slate-400" : "text-white/80"
+            }`}>
+              {stat.label}
             </div>
           </div>
-        </AnimatedSection>
 
+          {/* الخط السفلي التفاعلي */}
+          <div className="absolute bottom-[-6px] left-1/2 -translate-x-1/2 w-0 h-[1.5px] bg-[#4ade80] transition-all duration-300 group-hover:w-8 opacity-40" />
+        </div>
+      ))}
+    </div>
+  </div>
+</AnimatedSection>
       </div>
     </section>
   );

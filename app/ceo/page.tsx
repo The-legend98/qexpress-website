@@ -46,8 +46,10 @@ const content = {
           icon: "logistics",
           title: "اللوجستيات والشحن والبريد السريع",
           companies: [
-            { name: "جلوبال سنترال لوجيستكس", loc: "دبي 2016 / الأردن 2023", desc: "ريادة حلول الإمداد والشحن لتعزيز الربط التجاري الإقليمي." },
+            { name: "جلوبال سنترال لوجيستكس", loc: " الأردن 2023", desc: "ريادة حلول الإمداد والشحن لتعزيز الربط التجاري الإقليمي." },
             { name: "نيو قاسيون إكسبريس", loc: "سوريا، تأسست 2025", desc: "رؤية مستقبلية تركز على التخزين المتطور والبريد السريع لمتطلبات التجارة الحديثة." },
+            { name: "دي تو دي | D2D  لوجيستكس ", loc: " دبي", desc: "حلول لوجستية متكاملة تنطلق من قلب دبي، تجمع بين السرعة الفائقة والذكاء التشغيلي لإعادة تعريف مفاهيم النقل والتوصيل في المنطقة." },
+
           ],
         },
         {
@@ -76,8 +78,7 @@ const content = {
       badge: "التواصل المباشر",
       title: "تواصل مع رئيس المجلس",
       items: [
-        { label: "سوريا", value: "+963 955 597 000", icon: "phone" },
-        { label: "الأردن", value: "+962 799 217 215", icon: "phone" },
+  
         { label: "البريد الإلكتروني", value: "Moumen.marayati@qexpress-sy.com", icon: "email" },
       ],
       cta: "تواصل معنا",
@@ -117,8 +118,10 @@ const content = {
           icon: "logistics",
           title: "Logistics, Express & Supply Chain",
           companies: [
-            { name: "Global Central Logistics FZCO", loc: "Dubai 2016 / Jordan 2023", desc: "Driving regional connectivity through specialized freight and supply chain solutions." },
+            { name: "Global Central Shipping Services (GCSS)", loc: " Jordan 2023", desc: "Driving regional connectivity through specialized freight and supply chain solutions." },
             { name: "New Qasioun Express", loc: "Syria, Est. 2025", desc: "A forward-looking venture focused on advanced warehousing and express courier services." },
+            { name: "D2D Logistics ", loc: "Dubai", desc: "Integrated logistics solutions emerging from the heart of Dubai, combining high-speed delivery with operational intelligence to redefine regional transport and delivery standards." },
+
           ],
         },
         {
@@ -147,8 +150,7 @@ const content = {
       badge: "Direct Contact",
       title: "Reach the Chairman",
       items: [
-        { label: "Syria", value: "+963 955 597 000", icon: "phone" },
-        { label: "Jordan", value: "+962 799 217 215", icon: "phone" },
+       
         { label: "Email", value: "Moumen.marayati@qexpress-sy.com", icon: "email" },
       ],
       cta: "Contact Us",
@@ -625,7 +627,7 @@ export default function CEOPage() {
             </div>
           )}
 
-          <div className="grid sm:grid-cols-3 gap-5 mb-10">
+          <div className="grid sm:grid-cols-1 gap-5 mb-10">
             {t.contact.items.map((item, i) => {
               const ac = i % 2 === 0 ? G : M;
               return (

@@ -23,10 +23,9 @@ const content = {
     ],
     networkTitle: "شبكتنا الإقليمية",
     partners: [
-      { name: "مجموعة دمسكو", role: "المجموعة الأم — سوريا", color: "green" },
-      { name: "GCL الأردن", role: "Global Central Logistics", color: "maroon" },
-      { name: "GCL الإمارات", role: "Global Central Logistics", color: "maroon" },
-      { name: "D2D دبي", role: "وكيل Fly Sham Airlines", color: "green" },
+      { name: "مجموعة دامسكو", role: "سوريا", color: "green" },
+      { name: "GCL الأردن", role: "", color: "maroon" },
+      { name: "D2D دبي", role: "", color: "green" },
     ],
   },
   en: {
@@ -43,9 +42,8 @@ const content = {
     networkTitle: "Our Regional Network",
     partners: [
       { name: "Damsco Group", role: "Parent Group — Syria", color: "green" },
-      { name: "GCL Jordan", role: "Global Central Logistics", color: "maroon" },
-      { name: "GCL UAE", role: "Global Central Logistics", color: "maroon" },
-      { name: "D2D Dubai", role: "Fly Sham Airlines Agent", color: "green" },
+      { name: "GCL Jordan", role: "", color: "maroon" },
+      { name: "D2D Dubai", role: "", color: "green" },
     ],
   },
 };
@@ -178,21 +176,34 @@ export default function WhyUsSection({ lang }: WhyUsSectionProps) {
                 </div>
 
                 {/* Partners */}
-                <div className="grid grid-cols-2 gap-3 mb-6">
-                  {t.partners.map((partner) => (
-                    <div
-                      key={partner.name}
-                      className={`rounded-2xl p-4 backdrop-blur-sm border ${
-                        partner.color === "green"
-                          ? "bg-white/10 border-white/10"
-                          : "bg-[#8B1A2A]/40 border-[#8B1A2A]/30"
-                      }`}
-                    >
+               <div className="grid grid-cols-2 gap-3 mb-6">
+              {t.partners.map((partner, index) => (
+                <div
+                  key={partner.name}
+                  className={`rounded-2xl p-4 backdrop-blur-sm border transition-all duration-300 ${
+                    // جعل أول شركة تأخذ السطر بالكامل لتجنب الفراغ
+                    index === 0 ? "col-span-2" : "col-span-1"
+                  } ${
+                    partner.color === "green"
+                      ? "bg-white/10 border-white/10 hover:bg-white/15"
+                      : "bg-[#8B1A2A]/40 border-[#8B1A2A]/30 hover:bg-[#8B1A2A]/50"
+                  }`}
+                >
+                  <div className="flex justify-between items-start">
+                    <div>
                       <p className="font-bold text-sm mb-1">{partner.name}</p>
                       <p className="text-white/50 text-xs">{partner.role}</p>
                     </div>
-                  ))}
+                    {/* إضافة أيقونة صغيرة تعطي لمسة جمالية */}
+                    <div className="opacity-20">
+                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z" />
+                      </svg>
+                    </div>
+                  </div>
                 </div>
+              ))}
+            </div>
 
                 {/* Divider dots */}
                 <div className="flex items-center gap-2 mb-6">

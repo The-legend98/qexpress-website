@@ -4,6 +4,7 @@ import { useLang } from "@/lib/LangContext";
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 
+
 const G = "#1a5c2a";
 
 function useInView(threshold = 0.1) {
@@ -26,6 +27,49 @@ const a = (name: string, delay: number, dur = 0.6): React.CSSProperties => ({
   animation: `${name} ${dur}s ${delay}s cubic-bezier(0.23,1,0.32,1) both`,
   opacity: 0,
 });
+
+const socials = [
+  {
+    id: "fb",
+    label: "Facebook",
+    href: "https://www.facebook.com/profile.php?id=61588982938511",
+    // لون فيسبوك الرسمي
+    iconColor: "#1877F2", 
+    icon: (
+      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z" />
+      </svg>
+    ),
+  },
+  {
+    id: "li",
+    label: "LinkedIn",
+    href: "https://www.linkedin.com/company/qexpress-sy/",
+    // لون لينكد إن الرسمي
+    iconColor: "#0A66C2", 
+    icon: (
+      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-4 0v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z" />
+        <circle cx="4" cy="4" r="2" />
+      </svg>
+    ),
+  },
+  {
+    id: "ig",
+    label: "Instagram",
+    href: "https://www.instagram.com/q_express_sy/",
+    // لون إنستغرام (استخدمنا اللون الوردي/الأرجواني المميز)
+    iconColor: "#E1306C", 
+    icon: (
+      <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+        <rect x="2" y="2" width="20" height="20" rx="5" />
+        <circle cx="12" cy="12" r="4" />
+        <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" />
+      </svg>
+    ),
+  },
+];
+
 
 const content = {
   ar: {
@@ -221,21 +265,30 @@ export default function ContactPage() {
                 <div className="absolute inset-0 bg-gradient-to-t from-[#1a5c2a]/40 to-transparent" />
               </div>
 
-              {/* Floating badge */}
+             {/* Floating badge */}
               <div
+                dir={isAr ? "rtl" : "ltr"} 
                 className={`absolute -bottom-5 ${isAr ? "-left-5" : "-right-5"} px-5 py-4 rounded-2xl shadow-xl border hidden md:block ${
-                  isDark ? "bg-[#0d1421] border-white/8" : "bg-white border-gray-100"
+                  isDark ? "bg-[#0d1421] border-white/10" : "bg-white border-gray-100"
                 }`}
               >
                 <div className="flex items-center gap-3">
+               
                   <div className="w-10 h-10 bg-[#1a5c2a] rounded-xl flex items-center justify-center text-white shrink-0">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                     </svg>
                   </div>
-                  <div>
-                    <div className={`text-sm font-bold ${isDark ? "text-white" : "text-gray-900"}`}>{t.hero.fastResponse}</div>
-                    <div className="text-xs text-gray-500">24 Hours / 7 Days</div>
+
+                  {/* حاوية النصوص */}
+                  <div className="flex flex-col">
+                    <div className={`text-sm font-bold leading-tight ${isDark ? "text-white" : "text-gray-900"}`}>
+                      {t.hero.fastResponse}
+                    </div>
+             
+                    <div className="text-[10px] text-gray-500 mt-0.5" style={{ direction: 'ltr', textAlign: isAr ? 'right' : 'left' }}>
+                      24 Hours / 7 Days
+                    </div>
                   </div>
                 </div>
               </div>
@@ -390,42 +443,42 @@ export default function ContactPage() {
                   </div>
                 </div>
               </div>
-
-              {/* Social */}
-              <div
-                className={`rounded-[2rem] p-7 border transition-colors duration-300 ${
-                  isDark ? "bg-[#0d1421] border-white/5" : "bg-white border-gray-100 shadow-sm"
-                }`}
-                style={infoIn.visible ? a("qe-rotatein", 0.3) : { opacity: 0 }}
-              >
-                <p className={`text-xs font-bold uppercase tracking-widest mb-5 ${isDark ? "text-slate-500" : "text-gray-400"}`}>
-                  {t.info.follow}
-                </p>
-                <div className="grid grid-cols-2 gap-3">
-                  {[
-                    { label: "Facebook", color: "#1877F2" },
-                    { label: "LinkedIn", color: "#0A66C2" },
-                    { label: "Instagram", color: "#E1306C" },
-                    { label: "WhatsApp", color: "#25D366" },
-                  ].map((s) => (
-                    <a
-                      key={s.label}
-                      href="#"
-                      className={`flex items-center justify-center gap-2 py-3 rounded-2xl border text-xs font-bold transition-all duration-200 hover:-translate-y-0.5 ${
-                        isDark
-                          ? "bg-white/5 border-white/8 text-white hover:border-white/20"
-                          : "bg-gray-50 border-gray-100 text-gray-700 hover:border-gray-200 hover:shadow-sm"
-                      }`}
-                    >
-                      <span
-                        className="w-2 h-2 rounded-full shrink-0"
-                        style={{ background: s.color }}
-                      />
-                      {s.label}
-                    </a>
-                  ))}
+                {/* Social Section */}
+                <div
+                  className={`rounded-[2rem] p-7 border transition-colors duration-300 ${
+                    isDark ? "bg-[#0d1421] border-white/5" : "bg-white border-gray-100 shadow-sm"
+                  }`}
+                  style={infoIn.visible ? a("qe-rotatein", 0.3) : { opacity: 0 }}
+                >
+                  {/* عنوان القسم */}
+                  <p className={`text-xs font-bold uppercase tracking-widest mb-5 ${isDark ? "text-slate-500" : "text-gray-400"}`}>
+                    {t.info.follow}
+                  </p>
+                  
+                  {/* شبكة الأيقونات - حاوية واحدة فقط */}
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    {socials.map((s) => (
+                        <a
+                          key={s.id}
+                          href={s.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={`flex items-center justify-center gap-2 py-3 rounded-2xl border text-xs font-bold transition-all duration-200 hover:-translate-y-0.5 ${
+                            isDark
+                              ? "bg-white/5 border-white/8 text-white hover:border-white/20"
+                              : "bg-gray-50 border-gray-100 text-gray-700 hover:border-gray-200 hover:shadow-sm"
+                          }`}
+                        >
+                          {/* هنا نقوم بتطبيق لون الأيقونة الخاص بكل تطبيق */}
+                          <span style={{ color: s.iconColor }} className="shrink-0">
+                            {s.icon}
+                          </span>
+                          {s.label}
+                        </a>
+                      ))}
+                  </div>
                 </div>
-              </div>
+              
 
             </div>
           </div>

@@ -19,8 +19,8 @@ const M = "#8B1A2A";
 const content = {
   ar: {
     hero: { badge:"من نحن", title:"نيو قاسيون إكسبريس", subtitle:"شريك لوجستي من الجيل القادم",
-      desc:"تأسسنا عام 2025 برؤية واضحة لإعادة تعريف قطاع التوصيل السريع واللوجستيات التعاقدية في سوريا.",
-      stats:[{num:"2025",label:"تأسست"},{num:"100%",label:"تغطية سوريا"},{num:"24/7",label:"عمليات"}] },
+      desc:"تأسسنا برؤية واضحة لإعادة تعريف قطاع التوصيل السريع واللوجستيات التعاقدية في سوريا.",
+      stats:[{num:"100%",label:"تغطية سوريا"},{num:"24/7",label:"عمليات"}] },
     mission:{ badge:"رؤيتنا ورسالتنا",
       vision:{title:"رؤيتنا",desc:"أن نكون المنصة اللوجستية الأكثر قدرة وموثوقية في سوريا، والحلقة الأساسية بين التجارة المحلية والاقتصاد العالمي."},
       mission:{title:"رسالتنا",desc:"تمكين الأعمال وتسهيل النمو من خلال خدمات توصيل سريعة وموثوقة وحلول لوجستية تعاقدية مخصصة، مع وضع معايير الجودة والأمان وشراكة العملاء."} },
@@ -42,7 +42,7 @@ const content = {
   en: {
     hero:{ badge:"About Us", title:"New Qasioun Express", subtitle:"Next-Generation Logistics Partner",
       desc:"Founded in 2025 with a clear vision to redefine the express delivery and contract logistics landscape in Syria.",
-      stats:[{num:"2025",label:"Founded"},{num:"100%",label:"Syria Coverage"},{num:"24/7",label:"Operations"}] },
+      stats:[{num:"100%",label:"Syria Coverage"},{num:"24/7",label:"Operations"}] },
     mission:{ badge:"Vision & Mission",
       vision:{title:"Our Vision",desc:"To be the most capable and trusted express and logistics platform in Syria, recognized as the essential link between local commerce and the global economy."},
       mission:{title:"Our Mission",desc:"To empower businesses and facilitate growth by delivering reliable, time-definite express services and providing tailored, efficient contract logistics solutions."} },
@@ -135,7 +135,7 @@ function HeroGallery({ isAr }: { isAr: boolean }) {
           <span className="font-black text-white text-sm uppercase" style={{ animation:"qe-vantext 0.9s cubic-bezier(0.23,1,0.32,1) both", letterSpacing:"0.12em" }}>
             Moving With Purpose
           </span>
-          <span className="ms-auto text-white/55 text-xs font-semibold" style={{ animation:"qe-fadein 1s 0.6s both", opacity:0 }}>Since 2025</span>
+          <span className="ms-auto text-white/55 text-xs font-semibold" style={{ animation:"qe-fadein 1s 0.6s both", opacity:0 }}></span>
         </div>
       </div>
       <button onClick={prv} aria-label="prev" className="absolute top-1/2 -translate-y-1/2 start-3 z-10 w-9 h-9 rounded-full flex items-center justify-center hover:scale-110 transition-transform" style={{ background:M, boxShadow:`0 4px 14px ${M}55` }}>
