@@ -5,11 +5,18 @@ import { useState, useMemo } from "react";
 import { Country, City } from "country-state-city";
 import Select from "react-select";
 
+/* ════════════════════════════════════════════════════════════
+   🔌 لما يجهز الـ API من أودو: غيّر هالمتغير لـ false وبس
+   ════════════════════════════════════════════════════════════ */
+const COMING_SOON = true;
+
 const content = {
   ar: {
     badge: "احسب تكلفة شحنتك",
     title: "حاسبة",
     highlight: "أسعار الشحن",
+    comingSoon: "قريباً",
+    comingSoonNote: "نعمل حالياً على تفعيل حاسبة أسعار الشحن، ترقبونا قريباً",
     shipmentType: { label: "نوع الشحنة", options: [{ value: "document", label: "وثيقة" }, { value: "parcel", label: "طرد" }, { value: "cargo", label: "بضاعة" }] },
     from: { title: "الشحن من", country: "الدولة", city: "المدينة / الفرع" },
     to: { title: "الشحن إلى", country: "الدولة", city: "المدينة" },
@@ -29,6 +36,8 @@ const content = {
     badge: "Calculate Shipping Cost",
     title: "Shipping Cost",
     highlight: "Calculator",
+    comingSoon: "Coming Soon",
+    comingSoonNote: "We're working on activating the shipping cost calculator. Stay tuned!",
     shipmentType: { label: "Shipment Type", options: [{ value: "document", label: "Document" }, { value: "parcel", label: "Parcel" }, { value: "cargo", label: "Cargo" }] },
     from: { title: "Shipping From", country: "Country", city: "City / Branch" },
     to: { title: "Shipping To", country: "Country", city: "City" },
@@ -147,7 +156,42 @@ const getSelectStyles = (isDark: boolean) => ({
   clearIndicator: (base: object) => ({ ...base, color: isDark ? "#475569" : "#9ca3af", "&:hover": { color: "#8B1A2A" } }),
 });
 
-export default function ShippingCalculator() {
+/* ════════════════════════════════════════════════════════════
+   غلاف "قريباً" — يخلي السكشن مغبّش ومعطّل بدون ما يغيّر شكله
+   ════════════════════════════════════════════════════════════ */
+function ComingSoonWrapper({ children }: { children: React.ReactNode }) {
+  const { lang, isAr, isDark } = useLang();
+  const t = content[lang];
+
+  return (
+    <div className="relative" dir={isAr ? "rtl" : "ltr"}>
+      {/* السكشن الأصلي — مغبّش ومعطّل التفاعل */}
+      <div className="pointer-events-none select-none blur-[3px] opacity-50 saturate-[0.85]" aria-hidden="true">
+        {children}
+      </div>
+
+      {/* طبقة المنع + البادج */}
+      <div className="absolute inset-0 flex items-center justify-center cursor-not-allowed">
+        <div className={`inline-flex items-center gap-2.5 px-5 py-3 rounded-full backdrop-blur-sm border shadow-lg ${
+          isDark
+            ? "bg-[#0d1421]/80 border-[#8B1A2A]/30 text-white"
+            : "bg-white/85 border-[#8B1A2A]/20 text-gray-900"
+        }`}>
+          <span className="relative flex h-2.5 w-2.5">
+            <span className="absolute inline-flex h-full w-full rounded-full bg-[#8B1A2A] opacity-60 animate-ping" />
+            <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-[#8B1A2A]" />
+          </span>
+          <span className="text-sm font-black tracking-wide">{t.comingSoon}</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ════════════════════════════════════════════════════════════
+   النسخة الفعلية — جاهزة وما تغيّر فيها شي
+   ════════════════════════════════════════════════════════════ */
+function ShippingCalculatorLive() {
   const { lang, isAr, isDark } = useLang();
   const t = content[lang];
 
@@ -408,4 +452,18 @@ export default function ShippingCalculator() {
       </div>
     </section>
   );
+}
+
+/* ════════════════════════════════════════════════════════════
+   التصدير — يقرر شو يعرض حسب COMING_SOON
+   ════════════════════════════════════════════════════════════ */
+export default function ShippingCalculator() {
+  if (COMING_SOON) {
+    return (
+      <ComingSoonWrapper>
+        <ShippingCalculatorLive />
+      </ComingSoonWrapper>
+    );
+  }
+  return <ShippingCalculatorLive />;
 }

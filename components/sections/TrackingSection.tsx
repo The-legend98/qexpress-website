@@ -3,6 +3,11 @@
 import { useLang } from "@/lib/LangContext";
 import { useState } from "react";
 
+/* ════════════════════════════════════════════════════════════
+    لما يجهز الـ API من أودو: غيّر هالمتغير لـ false وبس
+   ════════════════════════════════════════════════════════════ */
+const COMING_SOON = true;
+
 const content = {
   ar: {
     badge: "تتبع شحنتك",
@@ -12,6 +17,8 @@ const content = {
     btn: "تتبع",
     loading: "جاري البحث...",
     notFound: "لم يتم العثور على شحنة بهذا الرقم",
+    comingSoon: "قريباً",
+    comingSoonNote: "نعمل حالياً على تفعيل خدمة تتبع الشحنات، ترقبونا قريباً",
     labels: {
       status: "الحالة",
       location: "الموقع الحالي",
@@ -32,6 +39,8 @@ const content = {
     btn: "Track",
     loading: "Searching...",
     notFound: "No shipment found with this number",
+    comingSoon: "Coming Soon",
+    comingSoonNote: "We're working on activating the shipment tracking service. Stay tuned!",
     labels: {
       status: "Status",
       location: "Current Location",
@@ -79,7 +88,42 @@ async function fetchShipment(trackingNumber: string): Promise<ShipmentResult> {
   throw new Error("Not found");
 }
 
-export default function TrackingSection() {
+/* ════════════════════════════════════════════════════════════
+   غلاف "قريباً" — يخلي السكشن مغبّش ومعطّل بدون ما يغيّر شكله
+   ════════════════════════════════════════════════════════════ */
+function ComingSoonWrapper({ children }: { children: React.ReactNode }) {
+  const { lang, isAr, isDark } = useLang();
+  const t = content[lang];
+
+  return (
+    <div className="relative" dir={isAr ? "rtl" : "ltr"}>
+      {/* السكشن الأصلي — مغبّش ومعطّل التفاعل */}
+      <div className="pointer-events-none select-none blur-[3px] opacity-50 saturate-[0.85]" aria-hidden="true">
+        {children}
+      </div>
+
+      {/* طبقة المنع + البادج */}
+      <div className="absolute inset-0 flex items-center justify-center cursor-not-allowed">
+        <div className={`inline-flex items-center gap-2.5 px-5 py-3 rounded-full backdrop-blur-sm border shadow-lg ${
+          isDark
+            ? "bg-[#0d1421]/80 border-[#1a5c2a]/30 text-white"
+            : "bg-white/85 border-[#1a5c2a]/20 text-gray-900"
+        }`}>
+          <span className="relative flex h-2.5 w-2.5">
+            <span className="absolute inline-flex h-full w-full rounded-full bg-[#1a5c2a] opacity-60 animate-ping" />
+            <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-[#1a5c2a]" />
+          </span>
+          <span className="text-sm font-black tracking-wide">{t.comingSoon}</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ════════════════════════════════════════════════════════════
+   النسخة الفعلية — جاهزة وما تغيّر فيها شي
+   ════════════════════════════════════════════════════════════ */
+function TrackingSectionLive() {
   const { lang, isAr, isDark } = useLang();
   const t = content[lang];
 
@@ -227,4 +271,18 @@ export default function TrackingSection() {
       </div>
     </section>
   );
+}
+
+/* ════════════════════════════════════════════════════════════
+   التصدير — يقرر شو يعرض حسب COMING_SOON
+   ════════════════════════════════════════════════════════════ */
+export default function TrackingSection() {
+  if (COMING_SOON) {
+    return (
+      <ComingSoonWrapper>
+        <TrackingSectionLive />
+      </ComingSoonWrapper>
+    );
+  }
+  return <TrackingSectionLive />;
 }
