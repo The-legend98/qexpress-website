@@ -78,8 +78,8 @@ export default function WhyUsSection({ lang }: WhyUsSectionProps) {
       <div className="absolute inset-0 pointer-events-none">
         {isDark && (
           <>
-            <div className="absolute top-1/3 right-0 w-[500px] h-[500px] rounded-full bg-[#1a5c2a]/4 blur-3xl" />
-            <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full bg-[#8B1A2A]/4 blur-3xl" />
+            <div className="absolute top-1/3 right-0 w-125 h-125 rounded-full bg-[#1a5c2a]/4 blur-3xl" />
+            <div className="absolute bottom-0 left-0 w-100 h-100 rounded-full bg-[#8B1A2A]/4 blur-3xl" />
           </>
         )}
         <svg className={`absolute inset-0 w-full h-full ${isDark ? "opacity-[0.025]" : "opacity-[0.035]"}`} xmlns="http://www.w3.org/2000/svg">
