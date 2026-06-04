@@ -12,6 +12,7 @@ const navLinksAr = [
   { label: "أسطولنا", href: "/fleet" },
   { label: "عملاؤنا", href: "/clients" },
   { label: "تواصل معنا", href: "/contact" },
+  { label: "المساعدة", href: "/help" },
 ];
 
 const navLinksEn = [
@@ -20,6 +21,7 @@ const navLinksEn = [
   { label: "Our Fleet", href: "/fleet" },
   { label: "Clients", href: "/clients" },
   { label: "Contact", href: "/contact" },
+  { label: "Help", href: "/help" },
 ];
 
 export default function Navbar() {

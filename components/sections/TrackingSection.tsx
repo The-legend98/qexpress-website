@@ -4,10 +4,34 @@ import { useLang } from "@/lib/LangContext";
 import { useState } from "react";
 
 /* ════════════════════════════════════════════════════════════
-    لما يجهز الـ API من أودو: غيّر هالمتغير لـ false وبس
+   🔌 لما يجهز الـ API من أودو: غيّر هالمتغير لـ false وبس
    ════════════════════════════════════════════════════════════ */
-const COMING_SOON = true;
+const COMING_SOON = false;
 
+// ── Types ──────────────────────────────────────────────────
+type TrackingStatus = {
+  code: string;
+  status: string;
+  is_completed: boolean;
+  is_current: boolean;
+};
+
+type ShipmentAttempt = {
+  date: string;
+  station: string;
+  code: string;
+  description: string;
+};
+
+type TrackingResult = {
+  shipment_number: string;
+  internal_tracking_number: string | false;
+  current_status: { code: string; status: string };
+  statuses: TrackingStatus[];
+  shipment_attempts: ShipmentAttempt[];
+};
+
+// ── Content ────────────────────────────────────────────────
 const content = {
   ar: {
     badge: "تتبع شحنتك",
@@ -18,18 +42,19 @@ const content = {
     loading: "جاري البحث...",
     notFound: "لم يتم العثور على شحنة بهذا الرقم",
     comingSoon: "قريباً",
-    comingSoonNote: "نعمل حالياً على تفعيل خدمة تتبع الشحنات، ترقبونا قريباً",
-    labels: {
-      status: "الحالة",
-      location: "الموقع الحالي",
-      delivery: "الوصول المتوقع",
+    shipmentNo: "رقم الشحنة",
+    internalNo: "رقم التتبع الداخلي",
+    history: "سجل الشحنة",
+    noHistory: "لا يوجد سجل متاح",
+    statusLabels: {
+      created: "تم الإنشاء",
+      collected: "تم الاستلام",
+      departed: "غادرت المنشأ",
+      in_transit: "في الطريق",
+      arrived_destination: "وصلت الوجهة",
+      out_for_delivery: "خارجة للتسليم",
+      delivered: "تم التسليم",
     },
-    statuses: {
-      "In Transit": "في الطريق",
-      "Delivered": "تم التسليم",
-      "Pending": "قيد الانتظار",
-      "Out for Delivery": "خارج للتسليم",
-    }
   },
   en: {
     badge: "Track Your Shipment",
@@ -40,69 +65,48 @@ const content = {
     loading: "Searching...",
     notFound: "No shipment found with this number",
     comingSoon: "Coming Soon",
-    comingSoonNote: "We're working on activating the shipment tracking service. Stay tuned!",
-    labels: {
-      status: "Status",
-      location: "Current Location",
-      delivery: "Expected Delivery",
+    shipmentNo: "Shipment Number",
+    internalNo: "Internal Tracking No.",
+    history: "Shipment History",
+    noHistory: "No history available",
+    statusLabels: {
+      created: "Created",
+      collected: "Collected",
+      departed: "Departed",
+      in_transit: "In Transit",
+      arrived_destination: "Arrived at Destination",
+      out_for_delivery: "Out for Delivery",
+      delivered: "Delivered",
     },
-    statuses: {
-      "In Transit": "In Transit",
-      "Delivered": "Delivered",
-      "Pending": "Pending",
-      "Out for Delivery": "Out for Delivery",
-    }
-  }
+  },
 };
 
-const STATUS_COLORS: Record<string, { bg: string; text: string; dot: string }> = {
-  "In Transit":       { bg: "bg-blue-50",   text: "text-blue-700",   dot: "bg-blue-500" },
-  "Delivered":        { bg: "bg-green-50",  text: "text-green-700",  dot: "bg-green-500" },
-  "Pending":          { bg: "bg-yellow-50", text: "text-yellow-700", dot: "bg-yellow-500" },
-  "Out for Delivery": { bg: "bg-orange-50", text: "text-orange-700", dot: "bg-orange-500" },
-};
-
-type ShipmentResult = {
-  status: string;
-  location: string;
-  estimatedDelivery: string;
-};
-
-async function fetchShipment(trackingNumber: string): Promise<ShipmentResult> {
-  // ══════════════════════════════════════════
-  // TODO: استبدل هيدا بالـ API الحقيقي
-  // const res = await fetch(`https://api.qexpress.sy/track/${trackingNumber}`);
-  // if (!res.ok) throw new Error("Not found");
-  // return res.json();
-  // ══════════════════════════════════════════
-
-  // Mock data مؤقت
-  await new Promise(r => setTimeout(r, 1200));
-  if (trackingNumber.startsWith("QE")) {
-    return {
-      status: "In Transit",
-      location: "دمشق - المستودع الرئيسي",
-      estimatedDelivery: "2026-05-05",
-    };
-  }
-  throw new Error("Not found");
+// ── Fetch ──────────────────────────────────────────────────
+async function fetchShipment(trackingNumber: string): Promise<TrackingResult> {
+  const res = await fetch(
+    `${window.location.origin}/api/track?shipment_number=${encodeURIComponent(trackingNumber)}`
+  );
+  const data = await res.json();
+  if (!data.success) throw new Error(data.message || "Not found");
+  const td = data.data.tracking_details;
+  return {
+    shipment_number: td.shipment_number,
+    internal_tracking_number: td.internal_tracking_number,
+    current_status: td.current_status,
+    statuses: td.statuses,
+    shipment_attempts: data.data.shipment_history.shipment_attempts,
+  };
 }
 
-/* ════════════════════════════════════════════════════════════
-   غلاف "قريباً" — يخلي السكشن مغبّش ومعطّل بدون ما يغيّر شكله
-   ════════════════════════════════════════════════════════════ */
+// ── Coming Soon Wrapper ────────────────────────────────────
 function ComingSoonWrapper({ children }: { children: React.ReactNode }) {
   const { lang, isAr, isDark } = useLang();
   const t = content[lang];
-
   return (
     <div className="relative" dir={isAr ? "rtl" : "ltr"}>
-      {/* السكشن الأصلي — مغبّش ومعطّل التفاعل */}
       <div className="pointer-events-none select-none blur-[3px] opacity-50 saturate-[0.85]" aria-hidden="true">
         {children}
       </div>
-
-      {/* طبقة المنع + البادج */}
       <div className="absolute inset-0 flex items-center justify-center cursor-not-allowed">
         <div className={`inline-flex items-center gap-2.5 px-5 py-3 rounded-full backdrop-blur-sm border shadow-lg ${
           isDark
@@ -120,15 +124,13 @@ function ComingSoonWrapper({ children }: { children: React.ReactNode }) {
   );
 }
 
-/* ════════════════════════════════════════════════════════════
-   النسخة الفعلية — جاهزة وما تغيّر فيها شي
-   ════════════════════════════════════════════════════════════ */
+// ── Live Section ───────────────────────────────────────────
 function TrackingSectionLive() {
   const { lang, isAr, isDark } = useLang();
   const t = content[lang];
 
   const [trackingNumber, setTrackingNumber] = useState("");
-  const [result, setResult] = useState<ShipmentResult | null>(null);
+  const [result, setResult] = useState<TrackingResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
 
@@ -147,8 +149,8 @@ function TrackingSectionLive() {
     }
   };
 
-  const statusColor = result ? (STATUS_COLORS[result.status] || STATUS_COLORS["Pending"]) : null;
-  const statusLabel = result ? (t.statuses[result.status as keyof typeof t.statuses] || result.status) : null;
+  const statusLabel = (code: string) =>
+    t.statusLabels[code as keyof typeof t.statusLabels] || code;
 
   return (
     <section className={`py-16 md:py-20 transition-colors duration-300 ${isDark ? "bg-[#080d14]" : "bg-gray-50"}`}>
@@ -163,8 +165,7 @@ function TrackingSectionLive() {
             {t.badge}
           </span>
           <h2 className={`text-3xl md:text-4xl font-black ${isDark ? "text-white" : "text-gray-900"}`}>
-            {t.title}{" "}
-            <span className="text-[#1a5c2a]">{t.highlight}</span>
+            {t.title}{" "}<span className="text-[#1a5c2a]">{t.highlight}</span>
           </h2>
         </div>
 
@@ -173,7 +174,6 @@ function TrackingSectionLive() {
           isDark ? "bg-[#0d1421] border-white/6" : "bg-white border-gray-100 shadow-sm"
         }`}>
           <div className="flex flex-col sm:flex-row gap-3">
-
             <input
               type="text"
               value={trackingNumber}
@@ -181,30 +181,25 @@ function TrackingSectionLive() {
               onKeyDown={(e) => e.key === "Enter" && handleTrack()}
               placeholder={t.placeholder}
               dir="ltr"
-               className={`flex-1 px-4 py-3.5 rounded-xl border text-sm font-medium transition-all focus:outline-none focus:ring-2 focus:ring-[#1a5c2a]/30 ${
-                  isDark
-                    ? "bg-[#050810] border-white/8 text-white placeholder-slate-600 focus:border-[#1a5c2a]/50"
-                    : "bg-gray-50 border-gray-200 text-gray-800 focus:border-[#1a5c2a] focus:bg-white"
-                }`}
+              className={`flex-1 px-4 py-3.5 rounded-xl border text-sm font-medium transition-all focus:outline-none focus:ring-2 focus:ring-[#1a5c2a]/30 ${
+                isDark
+                  ? "bg-[#050810] border-white/8 text-white placeholder-slate-600 focus:border-[#1a5c2a]/50"
+                  : "bg-gray-50 border-gray-200 text-gray-800 focus:border-[#1a5c2a] focus:bg-white"
+              }`}
             />
             <button
-                onClick={handleTrack}
-                disabled={loading || !trackingNumber.trim()}
-                className="relative overflow-hidden group px-6 py-3.5 rounded-xl font-bold text-sm text-white transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed hover:-translate-y-0.5 w-full sm:w-auto"
-                style={{ background: "linear-gradient(135deg,#1a5c2a,#134a20)", boxShadow: "0 4px 20px rgba(26,92,42,0.3)" }}
-              >
+              onClick={handleTrack}
+              disabled={loading || !trackingNumber.trim()}
+              className="relative overflow-hidden group px-6 py-3.5 rounded-xl font-bold text-sm text-white transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed hover:-translate-y-0.5 w-full sm:w-auto"
+              style={{ background: "linear-gradient(135deg,#1a5c2a,#134a20)", boxShadow: "0 4px 20px rgba(26,92,42,0.3)" }}
+            >
               <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
-              <span className="relative">{loading ? t.loading : t.btn}</span>
+              <span className="relative flex items-center justify-center gap-2">
+                {loading && <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />}
+                {loading ? t.loading : t.btn}
+              </span>
             </button>
           </div>
-
-          {/* Loading */}
-          {loading && (
-            <div className="mt-5 flex items-center justify-center gap-3">
-              <div className="w-5 h-5 border-2 border-[#1a5c2a] border-t-transparent rounded-full animate-spin" />
-              <span className={`text-sm ${isDark ? "text-slate-400" : "text-gray-500"}`}>{t.loading}</span>
-            </div>
-          )}
 
           {/* Error */}
           {error && !loading && (
@@ -217,53 +212,125 @@ function TrackingSectionLive() {
           )}
 
           {/* Result */}
-          {result && !loading && statusColor && (
-            <div className={`mt-5 rounded-xl border p-5 transition-colors duration-300 ${
+          {result && !loading && (
+            <div className={`mt-5 rounded-xl border transition-colors duration-300 overflow-hidden ${
               isDark ? "bg-[#050810] border-white/6" : "bg-gray-50 border-gray-100"
             }`}>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
 
-                {/* Status */}
-                <div className="flex flex-col gap-1.5">
-                  <span className={`text-xs font-semibold uppercase tracking-wider ${isDark ? "text-slate-500" : "text-gray-400"}`}>
-                    {t.labels.status}
-                  </span>
-                  <span className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-xl text-sm font-bold w-fit ${statusColor.bg} ${statusColor.text}`}>
-                    <span className={`w-2 h-2 rounded-full ${statusColor.dot} animate-pulse`} />
-                    {statusLabel}
-                  </span>
+              {/* Header بيانات الشحنة */}
+              <div className={`flex flex-wrap items-center justify-between gap-3 p-5 border-b ${
+                isDark ? "border-white/6" : "border-gray-100"
+              }`}>
+                <div>
+                  <p className={`text-xs font-semibold uppercase tracking-wider mb-1 ${isDark ? "text-slate-500" : "text-gray-400"}`}>
+                    {t.shipmentNo}
+                  </p>
+                  <p className={`text-sm font-bold font-mono ${isDark ? "text-white" : "text-gray-800"}`} dir="ltr">
+                    {result.shipment_number}
+                  </p>
+                  {result.internal_tracking_number && (
+                    <p className={`text-xs mt-0.5 font-mono ${isDark ? "text-slate-500" : "text-gray-400"}`} dir="ltr">
+                      {t.internalNo}: {result.internal_tracking_number}
+                    </p>
+                  )}
                 </div>
-
-                {/* Location */}
-                <div className="flex flex-col gap-1.5">
-                  <span className={`text-xs font-semibold uppercase tracking-wider ${isDark ? "text-slate-500" : "text-gray-400"}`}>
-                    {t.labels.location}
-                  </span>
-                  <span className={`text-sm font-semibold flex items-center gap-2 ${isDark ? "text-white" : "text-gray-800"}`}>
-                    <svg className="w-4 h-4 text-[#1a5c2a] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a2 2 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
-                    {result.location}
-                  </span>
-                </div>
-
-                {/* Delivery */}
-                <div className="flex flex-col gap-1.5">
-                  <span className={`text-xs font-semibold uppercase tracking-wider ${isDark ? "text-slate-500" : "text-gray-400"}`}>
-                    {t.labels.delivery}
-                  </span>
-                  <span className={`text-sm font-semibold flex items-center gap-2 ${isDark ? "text-white" : "text-gray-800"}`}>
-                    <svg className="w-4 h-4 text-[#8B1A2A] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
-                    {new Date(result.estimatedDelivery).toLocaleDateString(isAr ? "ar-SY" : "en-US", {
-                      year: "numeric", month: "long", day: "numeric"
-                    })}
-                  </span>
-                </div>
-
+                {/* Current Status Badge */}
+                <span className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold bg-[#1a5c2a] text-white"
+                  style={{ boxShadow: "0 4px 12px rgba(26,92,42,0.3)" }}>
+                  <span className="w-2 h-2 rounded-full bg-white/80 animate-pulse" />
+                  {statusLabel(result.current_status.code)}
+                </span>
               </div>
+
+              {/* Timeline */}
+              <div className="p-5">
+                <div className="flex items-start gap-0">
+                  {result.statuses.map((step, i) => {
+                    const isLast = i === result.statuses.length - 1;
+                    return (
+                      <div key={step.code} className="flex-1 flex flex-col items-center">
+                        {/* Connector + Circle row */}
+                        <div className="flex items-center w-full">
+                          {/* Left line */}
+                          {i > 0 && (
+                            <div className={`flex-1 h-0.5 transition-colors duration-300 ${
+                              result.statuses[i - 1].is_completed
+                                ? "bg-[#1a5c2a]"
+                                : isDark ? "bg-white/10" : "bg-gray-200"
+                            }`} />
+                          )}
+                          {/* Circle */}
+                          <div className={`relative w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-all duration-300 ${
+                            step.is_current
+                              ? "bg-[#1a5c2a] ring-4 ring-[#1a5c2a]/25"
+                              : step.is_completed
+                                ? "bg-[#1a5c2a]"
+                                : isDark ? "bg-white/10 border border-white/20" : "bg-white border-2 border-gray-200"
+                          }`}>
+                            {step.is_current && (
+                              <span className="absolute inset-0 rounded-full bg-[#1a5c2a]/40 animate-ping" />
+                            )}
+                            {step.is_completed || step.is_current ? (
+                              <svg className="w-3.5 h-3.5 text-white relative" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                              </svg>
+                            ) : (
+                              <span className={`w-2 h-2 rounded-full ${isDark ? "bg-white/20" : "bg-gray-300"}`} />
+                            )}
+                          </div>
+                          {/* Right line */}
+                          {!isLast && (
+                            <div className={`flex-1 h-0.5 transition-colors duration-300 ${
+                              step.is_completed
+                                ? "bg-[#1a5c2a]"
+                                : isDark ? "bg-white/10" : "bg-gray-200"
+                            }`} />
+                          )}
+                        </div>
+                        {/* Label */}
+                        <p className={`text-center mt-2 leading-tight transition-colors duration-300 ${
+                          step.is_current
+                            ? "text-[#1a5c2a] font-bold text-[10px]"
+                            : step.is_completed
+                              ? isDark ? "text-slate-300 text-[9px] font-medium" : "text-gray-500 text-[9px] font-medium"
+                              : isDark ? "text-slate-600 text-[9px]" : "text-gray-300 text-[9px]"
+                        }`}>
+                          {statusLabel(step.code)}
+                        </p>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* History */}
+              {result.shipment_attempts.length > 0 && (
+                <div className={`border-t px-5 pb-5 pt-4 ${isDark ? "border-white/6" : "border-gray-100"}`}>
+                  <p className={`text-xs font-bold uppercase tracking-wider mb-3 ${isDark ? "text-slate-500" : "text-gray-400"}`}>
+                    {t.history}
+                  </p>
+                  <div className="space-y-3">
+                    {result.shipment_attempts.map((attempt, i) => (
+                      <div key={i} className="flex gap-3">
+                        <div className="flex flex-col items-center">
+                          <div className="w-2 h-2 rounded-full bg-[#1a5c2a] mt-1.5 shrink-0" />
+                          {i < result.shipment_attempts.length - 1 && (
+                            <div className={`w-px flex-1 mt-1 ${isDark ? "bg-white/10" : "bg-gray-200"}`} />
+                          )}
+                        </div>
+                        <div className="pb-3">
+                          <p className={`text-xs font-semibold ${isDark ? "text-white" : "text-gray-800"}`}>
+                            {attempt.description}
+                          </p>
+                          <p className={`text-xs mt-0.5 ${isDark ? "text-slate-500" : "text-gray-400"}`} dir="ltr">
+                            {attempt.station} — {attempt.date}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -273,9 +340,7 @@ function TrackingSectionLive() {
   );
 }
 
-/* ════════════════════════════════════════════════════════════
-   التصدير — يقرر شو يعرض حسب COMING_SOON
-   ════════════════════════════════════════════════════════════ */
+// ── Export ─────────────────────────────────────────────────
 export default function TrackingSection() {
   if (COMING_SOON) {
     return (

@@ -98,8 +98,7 @@ export default function ServicesPage() {
         @keyframes qe-float    { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
         @keyframes qe-shimmer  { 0%{transform:translateX(-130%)} 100%{transform:translateX(320%)} }
         @keyframes qe-drawline { from{width:0} to{width:100%} }
-        .qe-badge-anim{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:5px 14px;border-radius:100px}
-      `}</style>
+        .qe-badge-anim{display:inline-flex;align-items:center;gap:6px;font-size:16px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:10px 24px;border-radius:100px}      `}</style>
 
       {/* Hero */}
       <section
@@ -123,8 +122,8 @@ export default function ServicesPage() {
           {heroIn.visible && (
             <>
               <div className="mb-6" style={a("qe-fadeup", 0)}>
-                <span className="qe-badge-anim" style={{ background: `${G}${isDark ? "25" : "10"}`, color: isDark ? "#4ade80" : G }}>
-                  <span className="w-1.5 h-1.5 rounded-full" style={{ background: isDark ? "#4ade80" : G }}/>
+                <span className="qe-badge-anim text-lg px-6 py-2.5" style={{ background: `${G}${isDark ? "25" : "10"}`, color: isDark ? "#4ade80" : G }}>
+                  
                   {t.hero.badge}
                 </span>
               </div>

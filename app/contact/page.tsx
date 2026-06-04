@@ -3,6 +3,7 @@
 import { useLang } from "@/lib/LangContext";
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import { submitContact } from "@/lib/forms";
 
 
 const G = "#1a5c2a";
@@ -90,12 +91,15 @@ const content = {
       name: "الاسم الكامل",
       email: "البريد الإلكتروني",
       phone: "رقم الهاتف",
-      company: "اسم الشركة (اختياري)",
+      company: "اسم الشركة",
       service: "الخدمة المطلوبة",
       serviceOptions: ["توصيل سريع", "لوجستيات تعاقدية", "شحن دولي", "دعم تجارة إلكترونية", "استفسار عام"],
-      message: "رسالتك",
+      message: "رسالتك (اختياري)",
       submit: "إرسال الرسالة",
+      sending: "جاري الإرسال...",
       success: "تم إرسال رسالتك بنجاح! سنتواصل معك قريباً.",
+      errorRequired: "يرجى تعبئة جميع الحقول المطلوبة",
+      errorGeneric: "حدث خطأ، يرجى المحاولة مجدداً أو التواصل معنا مباشرة",
     },
     info: {
       title: "معلومات التواصل",
@@ -128,12 +132,15 @@ const content = {
       name: "Full Name",
       email: "Email Address",
       phone: "Phone Number",
-      company: "Company Name (Optional)",
+      company: "Company Name",
       service: "Service Required",
       serviceOptions: ["Express Delivery", "Contract Logistics", "International Shipping", "E-Commerce Support", "General Inquiry"],
-      message: "Your Message",
+      message: "Your Message (Optional)",
       submit: "Send Message",
+      sending: "Sending...",
       success: "Your message was sent successfully! We'll contact you soon.",
+      errorRequired: "Please fill all required fields",
+      errorGeneric: "An error occurred, please try again or contact us directly",
     },
     info: {
       title: "Contact Information",
@@ -154,14 +161,45 @@ export default function ContactPage() {
   const { lang, isAr, isDark } = useLang();
   const t = content[lang];
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const [form, setForm] = useState({ name: "", email: "", phone: "", company: "", service: "", message: "" });
 
   const heroIn = useInView(0.05);
   const formIn = useInView(0.1);
   const infoIn = useInView(0.1);
 
-  const handleSubmit = () => {
-    if (form.name && form.email && form.message) setSubmitted(true);
+  // الحقول الإجبارية حسب أودو: fullname, email, phone, company, subject(=service)
+  const isValid =
+    form.name.trim() &&
+    form.email.trim() &&
+    form.phone.trim() &&
+    form.company.trim() &&
+    form.service.trim();
+
+  const handleSubmit = async () => {
+    if (!isValid) {
+      setError(t.form.errorRequired);
+      return;
+    }
+    setLoading(true);
+    setError("");
+    try {
+      await submitContact({
+        fullname: form.name,
+        email: form.email,
+        phone: form.phone,
+        company: form.company,
+        subject: form.service,   // الخدمة المطلوبة = موضوع الطلب
+        body: form.message,      // اختياري
+      });
+      setSubmitted(true);
+    } catch (e) {
+      // الرسالة القادمة من أودو (مثلاً بريد غير صالح) بتوصل جاهزة هون
+      setError(e instanceof Error ? e.message : t.form.errorGeneric);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const inputCls = `w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 transition-all ${
@@ -171,6 +209,7 @@ export default function ContactPage() {
   }`;
 
   const labelCls = `block text-xs font-medium mb-1.5 ${isDark ? "text-slate-400" : "text-gray-500"}`;
+  const req = <span className="text-[#8B1A2A]"> *</span>;
 
   return (
     <div
@@ -330,7 +369,7 @@ export default function ContactPage() {
                 <div className="space-y-5">
                   <div className="grid md:grid-cols-2 gap-5">
                     <div>
-                      <label className={labelCls}>{t.form.name}</label>
+                      <label className={labelCls}>{t.form.name}{req}</label>
                       <input
                         type="text"
                         value={form.name}
@@ -339,7 +378,7 @@ export default function ContactPage() {
                       />
                     </div>
                     <div>
-                      <label className={labelCls}>{t.form.phone}</label>
+                      <label className={labelCls}>{t.form.phone}{req}</label>
                       <input
                         type="tel"
                         value={form.phone}
@@ -351,7 +390,7 @@ export default function ContactPage() {
                   </div>
                   <div className="grid md:grid-cols-2 gap-5">
                     <div>
-                      <label className={labelCls}>{t.form.email}</label>
+                      <label className={labelCls}>{t.form.email}{req}</label>
                       <input
                         type="email"
                         value={form.email}
@@ -361,18 +400,27 @@ export default function ContactPage() {
                       />
                     </div>
                     <div>
-                      <label className={labelCls}>{t.form.service}</label>
-                      <select
-                        value={form.service}
-                        onChange={(e) => setForm({ ...form, service: e.target.value })}
+                      <label className={labelCls}>{t.form.company}{req}</label>
+                      <input
+                        type="text"
+                        value={form.company}
+                        onChange={(e) => setForm({ ...form, company: e.target.value })}
                         className={inputCls}
-                      >
-                        <option value="">—</option>
-                        {t.form.serviceOptions.map((o) => (
-                          <option key={o} value={o}>{o}</option>
-                        ))}
-                      </select>
+                      />
                     </div>
+                  </div>
+                  <div>
+                    <label className={labelCls}>{t.form.service}{req}</label>
+                    <select
+                      value={form.service}
+                      onChange={(e) => setForm({ ...form, service: e.target.value })}
+                      className={inputCls}
+                    >
+                      <option value="">—</option>
+                      {t.form.serviceOptions.map((o) => (
+                        <option key={o} value={o}>{o}</option>
+                      ))}
+                    </select>
                   </div>
                   <div>
                     <label className={labelCls}>{t.form.message}</label>
@@ -383,13 +431,28 @@ export default function ContactPage() {
                       className={`${inputCls} resize-none`}
                     />
                   </div>
+
+                  {/* Error */}
+                  {error && (
+                    <div className="flex items-center gap-3 p-4 rounded-xl bg-red-50 border border-red-100">
+                      <svg className="w-5 h-5 text-red-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <span className="text-sm text-red-600 font-medium">{error}</span>
+                    </div>
+                  )}
+
                   <button
                     onClick={handleSubmit}
-                    className="relative w-full overflow-hidden group bg-[#1a5c2a] text-white py-4 rounded-xl font-bold text-base transition-all duration-300 hover:-translate-y-0.5"
+                    disabled={loading}
+                    className="relative w-full overflow-hidden group bg-[#1a5c2a] text-white py-4 rounded-xl font-bold text-base transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0"
                     style={{ boxShadow: "0 8px 25px rgba(26,92,42,0.3)" }}
                   >
                     <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
-                    <span className="relative">{t.form.submit}</span>
+                    <span className="relative flex items-center justify-center gap-3">
+                      {loading && <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />}
+                      {loading ? t.form.sending : t.form.submit}
+                    </span>
                   </button>
                 </div>
               )}
