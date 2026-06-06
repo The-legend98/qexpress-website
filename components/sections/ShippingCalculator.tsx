@@ -4,14 +4,11 @@ import { useLang } from "@/lib/LangContext";
 import { useState, useEffect } from "react";
 import Select from "react-select";
 
-/* ════════════════════════════════════════════════════════════
-    لما يجهز الـ API من أودو: غيّر هالمتغير لـ false وبس
-   ════════════════════════════════════════════════════════════ */
 const COMING_SOON = false;
 
 // ── Types ──────────────────────────────────────────────────
 type CountryOpt = { value: number; label: string; code: string };
-type CityOpt    = { value: number; label: string };
+type CityOpt    = { value: number; label: string; cityId: number };
 
 type FormData = {
   shipmentType: string;
@@ -34,7 +31,6 @@ const INIT: FormData = {
   weight: "", length: "", width: "", height: "",
 };
 
-// ── Content ────────────────────────────────────────────────
 const content = {
   ar: {
     badge: "احسب تكلفة شحنتك",
@@ -43,23 +39,21 @@ const content = {
     comingSoon: "قريباً",
     shipmentType: {
       label: "نوع الشحنة",
-        options: [
+      options: [
         { value: "document", label: "وثيقة" },
         { value: "parcel",   label: "طرد" },
       ],
-
     },
-    from:    { title: "الشحن من",  country: "الدولة", city: "المنطقة / المدينة" },
-    to:      { title: "الشحن إلى", country: "الدولة", city: "المنطقة / المدينة" },
+    from:    { title: "الشحن من",  country: "الدولة", city: "المدينة" },
+    to:      { title: "الشحن إلى", country: "الدولة", city: "المدينة" },
     package: { title: "تفاصيل الطرد", weight: "الوزن (كغ)", length: "الطول (سم)", width: "العرض (سم)", height: "الارتفاع (سم)" },
     btn:        "احسب السعر",
     loading:    "جاري الحساب...",
     result:     "تكلفة الشحن",
     error:      "حدث خطأ، يرجى المحاولة مجدداً",
-    noRule:     "لا توجد أسعار متاحة لهذا المسار حالياً",
     note:       "السعر تقديري وقد يختلف حسب الظروف الفعلية",
     selectCountry: "ابحث عن دولة...",
-    selectCity:    "اختر المنطقة",
+    selectCity:    "اختر المدينة",
     noOptions:     "لا توجد نتائج",
     domestic:      "شحن داخلي",
     international: "شحن دولي",
@@ -72,23 +66,21 @@ const content = {
     comingSoon: "Coming Soon",
     shipmentType: {
       label: "Shipment Type",
-            options: [
+      options: [
         { value: "document", label: "Document" },
         { value: "parcel",   label: "Parcel" },
       ],
-      
     },
-    from:    { title: "Shipping From", country: "Country", city: "Area / City" },
-    to:      { title: "Shipping To",   country: "Country", city: "Area / City" },
+    from:    { title: "Shipping From", country: "Country", city: "City" },
+    to:      { title: "Shipping To",   country: "Country", city: "City" },
     package: { title: "Package Details", weight: "Weight (kg)", length: "Length (cm)", width: "Width (cm)", height: "Height (cm)" },
     btn:        "Calculate Price",
     loading:    "Calculating...",
     result:     "Shipping Cost",
     error:      "An error occurred, please try again",
-    noRule:     "No pricing available for this route",
     note:       "Price is estimated and may vary based on actual conditions",
     selectCountry: "Search country...",
-    selectCity:    "Select Area",
+    selectCity:    "Select City",
     noOptions:     "No results",
     domestic:      "Domestic",
     international: "International",
@@ -110,16 +102,26 @@ async function loadCities(countryId: number): Promise<CityOpt[]> {
   const res  = await fetch(`/api/areas?country_id=${countryId}`);
   const data = await res.json();
   if (!data.success) return [];
-  return data.data.map((s: { id: number; name: string }) => ({
-    value: s.id, label: s.name,
-  }));
+
+  // استخرج المدن الفريدة من المناطق
+  const citiesMap = new Map<number, CityOpt>();
+  data.data.forEach((s: { city_id: number; city_name: string }) => {
+    if (!citiesMap.has(s.city_id)) {
+      citiesMap.set(s.city_id, {
+        value:  s.city_id,
+        label:  s.city_name,
+        cityId: s.city_id,
+      });
+    }
+  });
+  return Array.from(citiesMap.values()).sort((a, b) => a.label.localeCompare(b.label));
 }
 
 async function calculateShipping(form: FormData): Promise<{ price: number; currency: string }> {
   const isDomestic = form.fromCountryId !== null && form.fromCountryId === form.toCountryId;
-  const weight  = parseFloat(form.weight);
+  const weight = parseFloat(form.weight);
   const l = parseFloat(form.length), w = parseFloat(form.width), h = parseFloat(form.height);
-  const volume = l > 0 && w > 0 && h > 0 ? (l * w * h) / 1000 : 0; // cm³ → liters
+  const volume = l > 0 && w > 0 && h > 0 ? (l * w * h) / 1_000_000 : 0; // cm³ → m³
 
   let pricing_method = "fixed";
   const extra: Record<string, unknown> = {};
@@ -130,11 +132,27 @@ async function calculateShipping(form: FormData): Promise<{ price: number; curre
   } else if (volume > 0) {
     pricing_method = "volume";
     extra.volume = volume;
+    extra.uom = "cubicmeter";
   }
 
   const body = isDomestic
-    ? { shipping_type: "domestic",       pricing_method, shipment_type: form.shipmentType, country_id: form.fromCountryId, from_city_id: form.fromCityId, to_city_id: form.toCityId, ...extra }
-    : { shipping_type: "international",  pricing_method, shipment_type: form.shipmentType, from_country_id: form.fromCountryId, to_country_id: form.toCountryId, ...extra };
+    ? {
+        shipping_type: "domestic",
+        pricing_method,
+        shipment_type: form.shipmentType,
+        country_id: form.fromCountryId,
+        from_city_id: form.fromCityId,  // city_id مباشرة
+        to_city_id:   form.toCityId,
+        ...extra,
+      }
+    : {
+        shipping_type: "international",
+        pricing_method,
+        shipment_type: form.shipmentType,
+        from_country_id: form.fromCountryId,
+        to_country_id:   form.toCountryId,
+        ...extra,
+      };
 
   const res  = await fetch("/api/calculate-rates", {
     method: "POST",
@@ -214,40 +232,31 @@ function ShippingCalculatorLive() {
   const [loading, setLoading]   = useState(false);
   const [error, setError]       = useState("");
 
-  const [countries, setCountries]         = useState<CountryOpt[]>([]);
-  const [fromCities, setFromCities]       = useState<CityOpt[]>([]);
-  const [toCities, setToCities]           = useState<CityOpt[]>([]);
+  const [countries, setCountries]               = useState<CountryOpt[]>([]);
+  const [fromCities, setFromCities]             = useState<CityOpt[]>([]);
+  const [toCities, setToCities]                 = useState<CityOpt[]>([]);
   const [loadingCountries, setLoadingCountries] = useState(true);
-  const [loadingFrom, setLoadingFrom]     = useState(false);
-  const [loadingTo, setLoadingTo]         = useState(false);
+  const [loadingFrom, setLoadingFrom]           = useState(false);
+  const [loadingTo, setLoadingTo]               = useState(false);
 
   const set = (key: keyof FormData, val: string | number | null) =>
     setForm(p => ({ ...p, [key]: val }));
 
-  // Load countries on mount
   useEffect(() => {
     setLoadingCountries(true);
-    loadCountries()
-      .then(setCountries)
-      .finally(() => setLoadingCountries(false));
+    loadCountries().then(setCountries).finally(() => setLoadingCountries(false));
   }, []);
 
-  // Load from-cities when from-country changes
   useEffect(() => {
     if (!form.fromCountryId) { setFromCities([]); return; }
     setLoadingFrom(true);
-    loadCities(form.fromCountryId)
-      .then(setFromCities)
-      .finally(() => setLoadingFrom(false));
+    loadCities(form.fromCountryId).then(setFromCities).finally(() => setLoadingFrom(false));
   }, [form.fromCountryId]);
 
-  // Load to-cities when to-country changes
   useEffect(() => {
     if (!form.toCountryId) { setToCities([]); return; }
     setLoadingTo(true);
-    loadCities(form.toCountryId)
-      .then(setToCities)
-      .finally(() => setLoadingTo(false));
+    loadCities(form.toCountryId).then(setToCities).finally(() => setLoadingTo(false));
   }, [form.toCountryId]);
 
   const isDomestic = form.fromCountryId !== null && form.fromCountryId === form.toCountryId;
@@ -343,9 +352,7 @@ function ShippingCalculatorLive() {
                     options={countries}
                     value={countries.find(o => o.value === form.fromCountryId) || null}
                     onChange={opt => {
-                      set("fromCountryId", opt?.value ?? null);
-                      set("fromCountryCode", opt?.code ?? "");
-                      set("fromCityId", null);
+                      setForm(p => ({ ...p, fromCountryId: opt?.value ?? null, fromCountryCode: opt?.code ?? "", fromCityId: null }));
                     }}
                     placeholder={loadingCountries ? "..." : t.selectCountry}
                     isLoading={loadingCountries}
@@ -355,7 +362,6 @@ function ShippingCalculatorLive() {
                     instanceId="from-country"
                   />
                 </div>
-                {/* Show cities only for domestic */}
                 {isDomestic && (
                   <div>
                     <label className={labelCls}>{t.from.city}</label>
@@ -367,7 +373,7 @@ function ShippingCalculatorLive() {
                       isLoading={loadingFrom}
                       noOptionsMessage={() => t.noOptions}
                       styles={selectStyles}
-                      isDisabled={!form.fromCountryCode || loadingFrom}
+                      isDisabled={!form.fromCountryId || loadingFrom}
                       isClearable isSearchable
                       instanceId="from-city"
                     />
@@ -388,9 +394,7 @@ function ShippingCalculatorLive() {
                     options={countries}
                     value={countries.find(o => o.value === form.toCountryId) || null}
                     onChange={opt => {
-                      set("toCountryId", opt?.value ?? null);
-                      set("toCountryCode", opt?.code ?? "");
-                      set("toCityId", null);
+                      setForm(p => ({ ...p, toCountryId: opt?.value ?? null, toCountryCode: opt?.code ?? "", toCityId: null }));
                     }}
                     placeholder={loadingCountries ? "..." : t.selectCountry}
                     isLoading={loadingCountries}
@@ -411,7 +415,7 @@ function ShippingCalculatorLive() {
                       isLoading={loadingTo}
                       noOptionsMessage={() => t.noOptions}
                       styles={selectStyles}
-                      isDisabled={!form.toCountryCode || loadingTo}
+                      isDisabled={!form.toCountryId || loadingTo}
                       isClearable isSearchable
                       instanceId="to-city"
                     />
@@ -484,7 +488,6 @@ function ShippingCalculatorLive() {
   );
 }
 
-// ── Export ─────────────────────────────────────────────────
 export default function ShippingCalculator() {
   if (COMING_SOON) {
     return (
