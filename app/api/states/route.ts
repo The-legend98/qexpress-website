@@ -8,7 +8,8 @@ const ODOO_DB      = process.env.ODOO_DB;
 
 export async function GET(
   _req: NextRequest,
-  { params }: { params: Promise<{ code: string }> }
+  // { params }: { params: Promise<{ code: string }> }
+  { params }: { params: any }
 ) {
   const { code } = await params;
   if (!ODOO_URL || !ODOO_API_KEY || !ODOO_DB) {
