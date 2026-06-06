@@ -15,7 +15,8 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ success: false, message: "Server not configured" }, { status: 500 });
   }
   try {
-    const res = await fetch(`${ODOO_URL}/api/areas/${countryId}`, {
+    const res = await fetch(`${ODOO_URL}/api/state/${countryId}`, {
+
       method: "GET",
       headers: {
         Authorization: ODOO_API_KEY,

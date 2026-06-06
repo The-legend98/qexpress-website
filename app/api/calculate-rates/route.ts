@@ -11,11 +11,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ success: false, message: "Server not configured" }, { status: 500 });
   }
   let body: unknown;
-  try {
-    body = await req.json();
-  } catch {
-    return NextResponse.json({ success: false, message: "Invalid JSON" }, { status: 400 });
-  }
+  try { body = await req.json(); }
+  catch { return NextResponse.json({ success: false, message: "Invalid JSON" }, { status: 400 }); }
   try {
     const res = await fetch(`${ODOO_URL}/api/calculate-shipping-rates`, {
       method: "POST",

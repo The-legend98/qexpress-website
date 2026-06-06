@@ -98,23 +98,13 @@ async function loadCountries(): Promise<CountryOpt[]> {
   }));
 }
 
-async function loadCities(countryId: number): Promise<CityOpt[]> {
-  const res  = await fetch(`/api/areas?country_id=${countryId}`);
+async function loadCities(countryCode: string): Promise<CityOpt[]> {
+  const res  = await fetch(`/api/areas?country_id=${countryCode}`);
   const data = await res.json();
   if (!data.success) return [];
-
-  // استخرج المدن الفريدة من المناطق
-  const citiesMap = new Map<number, CityOpt>();
-  data.data.forEach((s: { city_id: number; city_name: string }) => {
-    if (!citiesMap.has(s.city_id)) {
-      citiesMap.set(s.city_id, {
-        value:  s.city_id,
-        label:  s.city_name,
-        cityId: s.city_id,
-      });
-    }
-  });
-  return Array.from(citiesMap.values()).sort((a, b) => a.label.localeCompare(b.label));
+  return data.data
+    .map((c: { id: number; name: string }) => ({ value: c.id, label: c.name, cityId: c.id }))
+    .sort((a: CityOpt, b: CityOpt) => a.label.localeCompare(b.label));
 }
 
 async function calculateShipping(form: FormData): Promise<{ price: number; currency: string }> {
@@ -248,16 +238,16 @@ function ShippingCalculatorLive() {
   }, []);
 
   useEffect(() => {
-    if (!form.fromCountryId) { setFromCities([]); return; }
+    if (!form.fromCountryCode) { setFromCities([]); return; }
     setLoadingFrom(true);
-    loadCities(form.fromCountryId).then(setFromCities).finally(() => setLoadingFrom(false));
-  }, [form.fromCountryId]);
+    loadCities(form.fromCountryCode).then(setFromCities).finally(() => setLoadingFrom(false));
+  }, [form.fromCountryCode]);
 
   useEffect(() => {
-    if (!form.toCountryId) { setToCities([]); return; }
+    if (!form.toCountryCode) { setToCities([]); return; }
     setLoadingTo(true);
-    loadCities(form.toCountryId).then(setToCities).finally(() => setLoadingTo(false));
-  }, [form.toCountryId]);
+    loadCities(form.toCountryCode).then(setToCities).finally(() => setLoadingTo(false));
+  }, [form.toCountryCode]);
 
   const isDomestic = form.fromCountryId !== null && form.fromCountryId === form.toCountryId;
 
