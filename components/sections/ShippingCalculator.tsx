@@ -46,7 +46,7 @@ const content = {
     },
     from:    { title: "الشحن من",  country: "الدولة", city: "المدينة" },
     to:      { title: "الشحن إلى", country: "الدولة", city: "المدينة" },
-    package: { title: "تفاصيل الطرد", weight: "الوزن (كغ)", length: "الطول (سم)", width: "العرض (سم)", height: "الارتفاع (سم)" },
+    package: { titleParcel: "تفاصيل الطرد", titleDocument:"تفاصيل الوثيقة", weight: "الوزن (كغ)", length: "الطول (سم)", width: "العرض (سم)", height: "الارتفاع (سم)" },
     btn:        "احسب السعر",
     loading:    "جاري الحساب...",
     result:     "تكلفة الشحن",
@@ -73,7 +73,7 @@ const content = {
     },
     from:    { title: "Shipping From", country: "Country", city: "City" },
     to:      { title: "Shipping To",   country: "Country", city: "City" },
-    package: { title: "Package Details", weight: "Weight (kg)", length: "Length (cm)", width: "Width (cm)", height: "Height (cm)" },
+    package: { titleParcel: "Parcel Details", titleDocument: "Document Details", weight: "Weight (kg)", length: "Length (cm)", width: "Width (cm)", height: "Height (cm)" },
     btn:        "Calculate Price",
     loading:    "Calculating...",
     result:     "Shipping Cost",
@@ -293,6 +293,9 @@ function ShippingCalculatorLive() {
     </div>
   );
 
+  
+  const isParcel = form.shipmentType === "parcel";
+
   return (
     <section className={`py-16 md:py-20 transition-colors duration-300 ${isDark ? "bg-[#050810]" : "bg-white"}`}>
       <div className="max-w-4xl mx-auto px-6" dir={isAr ? "rtl" : "ltr"}>
@@ -417,15 +420,26 @@ function ShippingCalculatorLive() {
 
           {/* 4 — Package Details */}
           <div className={sectionCls}>
-            {sectionTitle(t.package.title,
+            {sectionTitle(isParcel ? t.package.titleParcel : t.package.titleDocument,
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"/></svg>
             )}
+
+            {/*Parcel or Document Details :   */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              {([
+              {isParcel ? ([
                 ["weight", t.package.weight, "1"],
                 ["length", t.package.length, "30"],
                 ["width",  t.package.width,  "20"],
                 ["height", t.package.height, "15"],
+              ] as const).map(([key, label, ph]) => (
+                <div key={key}>
+                  <label className={labelCls}>{label}</label>
+                  <input type="number" min="0" value={form[key]}
+                    onChange={e => set(key, e.target.value)}
+                    className={inputCls} placeholder={ph} dir="ltr" />
+                </div>
+              )) : ([
+                ["weight", t.package.weight, "1"],
               ] as const).map(([key, label, ph]) => (
                 <div key={key}>
                   <label className={labelCls}>{label}</label>
@@ -441,7 +455,7 @@ function ShippingCalculatorLive() {
           <button onClick={handleSubmit} disabled={!isValid || loading}
             className="relative overflow-hidden group w-full py-4 rounded-2xl font-black text-base text-white transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed hover:-translate-y-0.5"
             style={{ background: "linear-gradient(135deg,#8B1A2A,#6d1421)", boxShadow: "0 8px 25px rgba(139,26,42,0.3)" }}>
-            <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+            <span className="absolute inset-0 bg-linear-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
             <span className="relative flex items-center justify-center gap-3">
               {loading && <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />}
               {loading ? t.loading : t.btn}
